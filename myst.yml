@@ -1,7 +1,7 @@
 version: 1
 
 project:
-  title: profile
+  title: Profile
   authors:
     - name: Elvita Dian Prameswari
 
@@ -13,4 +13,5 @@ site:
   options:
     folders: true
     logo: foto.jpg
+    style: ./custom.css
   template: book-theme
