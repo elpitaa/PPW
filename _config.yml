@@ -1,2 +1,13 @@
 title: Profile
 author: Elvita Dian Prameswari
+
+logo: foto.jpg
+
+execute:
+  execute_notebooks: off
+
+html:
+  home_page_in_navbar: true
+  use_issues_button: true
+  use_repository_button: true
+  use_download_button: true
