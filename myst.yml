@@ -1,0 +1,12 @@
+version: 1
+project:
+  title: Web Mining
+  authors:
+    - name: Elvita Dian Prameswari
+  toc:
+    - file: intro.md
+    - file: pengantar-web-mining.md
+site:
+  options:
+    folders: true
+  template: book-theme
