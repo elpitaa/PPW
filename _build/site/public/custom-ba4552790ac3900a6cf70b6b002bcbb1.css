@@ -1,6 +1,6 @@
 /* Memperbesar foto/logo di bagian atas */
 header img {
     width: 150px !important;
-    height: 150px !important;
+    height: 90px !important;
     object-fit: cover;
 }
