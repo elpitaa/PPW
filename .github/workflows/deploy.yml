@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  BASE_URL: /PPW
+
 permissions:
   contents: write
 
