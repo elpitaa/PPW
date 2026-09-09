@@ -1,7 +1,14 @@
-title: Profile
+title: PPW - Web Search & Mining
 author: Elvita Dian Prameswari
-
 logo: foto.jpg
+
+repository:
+  url: https://github.com/elpitaa/PPW
+
+exclude_patterns:
+  - .venv/**
+  - _build/**
+  - .git/**
 
 execute:
   execute_notebooks: off
