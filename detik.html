@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'detik';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -383,6 +385,19 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-understanding-dan-data-preparation">Data Understanding dan Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-teks-dan-perhitungan-kata-unik">Preprocessing Teks dan Perhitungan Kata Unik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-yang-dilakukan">Apa yang dilakukan?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ada-dua-hasil">Mengapa ada dua hasil?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-preprocessing-sampai-klasifikasi">Alur Preprocessing sampai Klasifikasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-1-membentuk-dokumen-token">Tahap 1: Membentuk Dokumen Token</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-membagi-data-training-dan-testing">Tahap 2: Membagi Data Training dan Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-vocabulary-dan-idf">Tahap 3: Vocabulary dan IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-menghitung-nilai-tf-idf">Tahap 4: Menghitung Nilai TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-5-membentuk-dataset-vektor">Tahap 5: Membentuk Dataset Vektor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-6-klasifikasi-berbasis-centroid">Tahap 6: Klasifikasi Berbasis Centroid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
 </ul>
             </nav>
         </div>
@@ -481,7 +496,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pandas in .\.venv\lib\site-packages (2.3.3)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pandas in .\.venv\lib\site-packages (2.3.3)Note: you may need to restart the kernel to use updated packages.
+
 Requirement already satisfied: requests in .\.venv\lib\site-packages (2.32.5)
 Requirement already satisfied: beautifulsoup4 in .\.venv\lib\site-packages (4.15.0)
 Requirement already satisfied: numpy&gt;=1.22.4 in .\.venv\lib\site-packages (from pandas) (2.0.2)
@@ -495,7 +511,6 @@ Requirement already satisfied: certifi&gt;=2017.4.17 in .\.venv\lib\site-package
 Requirement already satisfied: soupsieve&gt;=1.6.1 in .\.venv\lib\site-packages (from beautifulsoup4) (2.8.4)
 Requirement already satisfied: typing-extensions&gt;=4.0.0 in .\.venv\lib\site-packages (from beautifulsoup4) (4.16.0)
 Requirement already satisfied: six&gt;=1.5 in .\.venv\lib\site-packages (from python-dateutil&gt;=2.8.2-&gt;pandas) (1.17.0)
-Note: you may need to restart the kernel to use updated packages.
 </pre></div>
 </div>
 </div>
@@ -1105,6 +1120,609 @@ Duplikat isi berita: 0
 </div></div></div>
 </div>
 </section>
+<section id="preprocessing-teks-dan-perhitungan-kata-unik">
+<h2>Preprocessing Teks dan Perhitungan Kata Unik<a class="headerlink" href="#preprocessing-teks-dan-perhitungan-kata-unik" title="Permalink to this heading">#</a></h2>
+<p>Pada bagian ini, teks dari 200 artikel dipersiapkan sebelum dianalisis jumlah kata uniknya.</p>
+<section id="apa-yang-dilakukan">
+<h3>Apa yang dilakukan?<a class="headerlink" href="#apa-yang-dilakukan" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Tokenisasi</strong>: memecah teks panjang menjadi kata-kata kecil yang disebut token.</p></li>
+<li><p><strong>Lowercase</strong>: mengubah semua huruf menjadi huruf kecil, sehingga <code class="docutils literal notranslate"><span class="pre">Indonesia</span></code> dan <code class="docutils literal notranslate"><span class="pre">indonesia</span></code> dihitung sebagai kata yang sama.</p></li>
+<li><p><strong>Penyaringan token</strong>: hanya mengambil token yang terdiri dari huruf dan memiliki minimal 3 karakter. Tanda baca, angka, dan kata sangat pendek seperti <code class="docutils literal notranslate"><span class="pre">di</span></code> tidak dihitung.</p></li>
+<li><p><strong>Penggabungan teks</strong>: seluruh isi berita digabung untuk mengetahui kosakata dari semua artikel.</p></li>
+<li><p><strong>Perhitungan kata unik</strong>: <code class="docutils literal notranslate"><span class="pre">set()</span></code> menghapus kata yang berulang, sehingga yang dihitung hanya kata berbeda.</p></li>
+<li><p><strong>Pengelompokan kategori</strong>: proses yang sama dilakukan untuk artikel <code class="docutils literal notranslate"><span class="pre">sport</span></code> dan <code class="docutils literal notranslate"><span class="pre">finance</span></code> agar keduanya dapat dibandingkan.</p></li>
+</ol>
+</section>
+<section id="mengapa-ada-dua-hasil">
+<h3>Mengapa ada dua hasil?<a class="headerlink" href="#mengapa-ada-dua-hasil" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Sebelum stopword removal</strong>: semua kata yang lolos tokenisasi dihitung, termasuk kata umum.</p></li>
+<li><p><strong>Setelah stopword removal</strong>: kata umum seperti <code class="docutils literal notranslate"><span class="pre">yang</span></code>, <code class="docutils literal notranslate"><span class="pre">dan</span></code>, <code class="docutils literal notranslate"><span class="pre">di</span></code>, dan <code class="docutils literal notranslate"><span class="pre">untuk</span></code> dihapus menggunakan <code class="docutils literal notranslate"><span class="pre">stopwords_id</span></code>. Hasil ini lebih membantu untuk melihat kosakata yang berkaitan dengan topik berita.</p></li>
+</ul>
+<p>Jadi, kode setelah bagian ini bukan hanya menghitung frekuensi kemunculan kata, tetapi juga menghitung banyaknya kosakata berbeda dalam dataset.</p>
+</section>
+</section>
+<section id="alur-preprocessing-sampai-klasifikasi">
+<h2>Alur Preprocessing sampai Klasifikasi<a class="headerlink" href="#alur-preprocessing-sampai-klasifikasi" title="Permalink to this heading">#</a></h2>
+<p>Setelah data berita terkumpul, alurnya adalah:</p>
+<ol class="arabic simple">
+<li><p>Membersihkan simbol dan mengubah teks menjadi kata-kata.</p></li>
+<li><p>Menghitung kata unik untuk mengetahui kosakata dataset.</p></li>
+<li><p>Membagi data menjadi 160 berita training dan 40 berita testing.</p></li>
+<li><p>Mengubah setiap berita menjadi vektor angka menggunakan TF-IDF.</p></li>
+<li><p>Mengubah label kategori menjadi angka: <code class="docutils literal notranslate"><span class="pre">sport</span> <span class="pre">=</span> <span class="pre">1</span></code> dan <code class="docutils literal notranslate"><span class="pre">finance</span> <span class="pre">=</span> <span class="pre">2</span></code>.</p></li>
+<li><p>Menguji klasifikasi berdasarkan kedekatan vektor berita dengan pusat kategori.</p></li>
+</ol>
+<p>TF-IDF penting karena komputer tidak memahami isi berita sebagai manusia. Teks perlu diubah menjadi angka agar dapat dibandingkan dan digunakan dalam klasifikasi.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+<span class="n">stopwords_id</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"yang"</span><span class="p">,</span> <span class="s2">"dan"</span><span class="p">,</span> <span class="s2">"di"</span><span class="p">,</span> <span class="s2">"ke"</span><span class="p">,</span> <span class="s2">"dari"</span><span class="p">,</span> <span class="s2">"ini"</span><span class="p">,</span> <span class="s2">"itu"</span><span class="p">,</span> <span class="s2">"untuk"</span><span class="p">,</span> <span class="s2">"dengan"</span><span class="p">,</span>
+    <span class="s2">"pada"</span><span class="p">,</span> <span class="s2">"dalam"</span><span class="p">,</span> <span class="s2">"atau"</span><span class="p">,</span> <span class="s2">"juga"</span><span class="p">,</span> <span class="s2">"akan"</span><span class="p">,</span> <span class="s2">"ada"</span><span class="p">,</span> <span class="s2">"sebagai"</span><span class="p">,</span> <span class="s2">"lebih"</span><span class="p">,</span>
+    <span class="s2">"sudah"</span><span class="p">,</span> <span class="s2">"telah"</span><span class="p">,</span> <span class="s2">"tidak"</span><span class="p">,</span> <span class="s2">"karena"</span><span class="p">,</span> <span class="s2">"oleh"</span><span class="p">,</span> <span class="s2">"saat"</span><span class="p">,</span> <span class="s2">"hingga"</span><span class="p">,</span> <span class="s2">"dapat"</span><span class="p">,</span>
+    <span class="s2">"bisa"</span><span class="p">,</span> <span class="s2">"jadi"</span><span class="p">,</span> <span class="s2">"para"</span><span class="p">,</span> <span class="s2">"nya"</span><span class="p">,</span> <span class="s2">"ia"</span><span class="p">,</span> <span class="s2">"tak"</span><span class="p">,</span> <span class="s2">"tersebut"</span><span class="p">,</span> <span class="s2">"mereka"</span><span class="p">,</span>
+    <span class="s2">"tautan"</span><span class="p">,</span> <span class="s2">"disalin"</span><span class="p">,</span> <span class="s2">"artikel"</span><span class="p">,</span> <span class="s2">"baca"</span><span class="p">,</span> <span class="s2">"saya"</span><span class="p">,</span> <span class="s2">"selengkapnya"</span><span class="p">,</span> <span class="s2">"detik"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Analisis jumlah kata unik pada 200 artikel.</span>
+<span class="c1"># Simbol dibuang sebelum tokenisasi agar kata dihitung secara konsisten.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bersihkan_simbol</span><span class="p">(</span><span class="n">teks</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^a-zA-ZÀ-ÿ\s]"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">teks</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tokenisasi</span><span class="p">(</span><span class="n">teks</span><span class="p">):</span>
+    <span class="n">teks_bersih</span> <span class="o">=</span> <span class="n">bersihkan_simbol</span><span class="p">(</span><span class="n">teks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[a-zA-ZÀ-ÿ]{3,}"</span><span class="p">,</span> <span class="n">teks_bersih</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+<span class="n">semua_token</span> <span class="o">=</span> <span class="n">tokenisasi</span><span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)))</span>
+<span class="n">token_per_label</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">tokenisasi</span><span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">,</span> <span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"sport"</span><span class="p">,</span> <span class="s2">"finance"</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">ringkasan_kosakata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">"cakupan"</span><span class="p">:</span> <span class="s2">"Semua artikel"</span><span class="p">,</span>
+        <span class="s2">"jumlah_artikel"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">),</span>
+        <span class="s2">"total_kemunculan_kata"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">semua_token</span><span class="p">),</span>
+        <span class="s2">"jumlah_kata_unik"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">semua_token</span><span class="p">)),</span>
+    <span class="p">},</span>
+    <span class="o">*</span><span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"cakupan"</span><span class="p">:</span> <span class="n">label</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+            <span class="s2">"jumlah_artikel"</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">dataset</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">"total_kemunculan_kata"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span>
+            <span class="s2">"jumlah_kata_unik"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">)),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">token_per_label</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">],</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ringkasan kata sebelum stopword removal:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ringkasan_kosakata</span><span class="p">)</span>
+
+<span class="c1"># Kata unik setelah stopword removal lebih representatif untuk melihat kosakata topik.</span>
+<span class="n">token_tanpa_stopword</span> <span class="o">=</span> <span class="p">[</span><span class="n">kata</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">semua_token</span> <span class="k">if</span> <span class="n">kata</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords_id</span><span class="p">]</span>
+<span class="n">token_tanpa_stopword_per_label</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">label</span><span class="p">:</span> <span class="p">[</span><span class="n">kata</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">kata</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords_id</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">token_per_label</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">ringkasan_setelah_stopword</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">"cakupan"</span><span class="p">:</span> <span class="s2">"Semua artikel"</span><span class="p">,</span>
+        <span class="s2">"total_kemunculan_kata"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_tanpa_stopword</span><span class="p">),</span>
+        <span class="s2">"jumlah_kata_unik"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">token_tanpa_stopword</span><span class="p">)),</span>
+    <span class="p">},</span>
+    <span class="o">*</span><span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"cakupan"</span><span class="p">:</span> <span class="n">label</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+            <span class="s2">"total_kemunculan_kata"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span>
+            <span class="s2">"jumlah_kata_unik"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">)),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">token_tanpa_stopword_per_label</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">],</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ringkasan kata setelah stopword removal:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ringkasan_setelah_stopword</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"10 kata unik paling sering muncul pada seluruh artikel setelah stopword removal:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">token_tanpa_stopword</span><span class="p">)</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"kata"</span><span class="p">,</span> <span class="s2">"frekuensi"</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ringkasan kata sebelum stopword removal:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cakupan</th>
+      <th>jumlah_artikel</th>
+      <th>total_kemunculan_kata</th>
+      <th>jumlah_kata_unik</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Semua artikel</td>
+      <td>200</td>
+      <td>66904</td>
+      <td>6786</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sport</td>
+      <td>100</td>
+      <td>29609</td>
+      <td>3700</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Finance</td>
+      <td>100</td>
+      <td>37295</td>
+      <td>4573</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ringkasan kata setelah stopword removal:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cakupan</th>
+      <th>total_kemunculan_kata</th>
+      <th>jumlah_kata_unik</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Semua artikel</td>
+      <td>54971</td>
+      <td>6749</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sport</td>
+      <td>24432</td>
+      <td>3663</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Finance</td>
+      <td>30539</td>
+      <td>4536</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 kata unik paling sering muncul pada seluruh artikel setelah stopword removal:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>kata</th>
+      <th>frekuensi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>motogp</td>
+      <td>447</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>indonesia</td>
+      <td>330</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>marquez</td>
+      <td>324</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>wib</td>
+      <td>307</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>aragon</td>
+      <td>286</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>jakarta</td>
+      <td>270</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>marc</td>
+      <td>261</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>menjadi</td>
+      <td>254</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>anda</td>
+      <td>217</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>kami</td>
+      <td>206</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="tahap-1-membentuk-dokumen-token">
+<h2>Tahap 1: Membentuk Dokumen Token<a class="headerlink" href="#tahap-1-membentuk-dokumen-token" title="Permalink to this heading">#</a></h2>
+<p>Pada tahap ini, setiap isi berita diubah menjadi daftar kata.</p>
+<ul class="simple">
+<li><p>Simbol seperti <code class="docutils literal notranslate"><span class="pre">?</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, dan <code class="docutils literal notranslate"><span class="pre">.</span></code> dibuang.</p></li>
+<li><p>Semua huruf diubah menjadi lowercase.</p></li>
+<li><p>Kata umum dalam <code class="docutils literal notranslate"><span class="pre">stopwords_id</span></code> diabaikan.</p></li>
+<li><p>Hasilnya disimpan dalam variabel <code class="docutils literal notranslate"><span class="pre">dokumen_token</span></code>.</p></li>
+</ul>
+<p>Contoh sederhana: teks <code class="docutils literal notranslate"><span class="pre">Harga</span> <span class="pre">saham</span> <span class="pre">naik!</span></code> menjadi token <code class="docutils literal notranslate"><span class="pre">harga</span></code>, <code class="docutils literal notranslate"><span class="pre">saham</span></code>, dan <code class="docutils literal notranslate"><span class="pre">naik</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Mengubah isi berita menjadi daftar kata bersih.</span>
+<span class="n">dokumen_token</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="n">kata</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">tokenisasi</span><span class="p">(</span><span class="n">teks</span><span class="p">)</span> <span class="k">if</span> <span class="n">kata</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords_id</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">teks</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah dokumen: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dokumen_token</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Contoh jumlah kata pada dokumen pertama: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dokumen_token</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah dokumen: 200
+Contoh jumlah kata pada dokumen pertama: 396
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tahap-2-membagi-data-training-dan-testing">
+<h2>Tahap 2: Membagi Data Training dan Testing<a class="headerlink" href="#tahap-2-membagi-data-training-dan-testing" title="Permalink to this heading">#</a></h2>
+<p>Data dibagi menjadi dua bagian:</p>
+<ul class="simple">
+<li><p><strong>Training</strong>: 160 berita, terdiri dari 80 <code class="docutils literal notranslate"><span class="pre">sport</span></code> dan 80 <code class="docutils literal notranslate"><span class="pre">finance</span></code>.</p></li>
+<li><p><strong>Testing</strong>: 40 berita, terdiri dari 20 <code class="docutils literal notranslate"><span class="pre">sport</span></code> dan 20 <code class="docutils literal notranslate"><span class="pre">finance</span></code>.</p></li>
+</ul>
+<p>Data training dipakai untuk membangun vocabulary dan nilai IDF. Data testing dipakai untuk melihat apakah pola yang dipelajari dapat digunakan pada berita yang belum dipakai saat pembelajaran.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pembagian data: 160 training dan 40 testing.</span>
+<span class="n">indeks_training</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"sport"</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="o">+</span> <span class="n">dataset</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"finance"</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">indeks_testing</span> <span class="o">=</span> <span class="p">[</span><span class="n">indeks</span> <span class="k">for</span> <span class="n">indeks</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">indeks</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">indeks_training</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Training: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indeks_training</span><span class="p">)</span><span class="si">}</span><span class="s2"> berita"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Testing: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indeks_testing</span><span class="p">)</span><span class="si">}</span><span class="s2"> berita"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training: 160 berita
+Testing: 40 berita
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tahap-3-vocabulary-dan-idf">
+<h2>Tahap 3: Vocabulary dan IDF<a class="headerlink" href="#tahap-3-vocabulary-dan-idf" title="Permalink to this heading">#</a></h2>
+<p><strong>Vocabulary</strong> adalah kumpulan semua kata unik yang ditemukan pada data training. Setiap kata menjadi satu fitur atau satu posisi dalam vektor.</p>
+<p>IDF (<em>Inverse Document Frequency</em>) mengukur seberapa jarang sebuah kata muncul pada seluruh dokumen:</p>
+<div class="math notranslate nohighlight">
+\[
+IDF(t) = \log\left(\frac{1 + N}{1 + DF(t)}\right) + 1
+\]</div>
+<p><code class="docutils literal notranslate"><span class="pre">N</span></code> adalah jumlah dokumen training, sedangkan <code class="docutils literal notranslate"><span class="pre">DF(t)</span></code> adalah jumlah dokumen yang mengandung kata <code class="docutils literal notranslate"><span class="pre">t</span></code>. Kata yang muncul di banyak berita mendapat bobot lebih kecil karena kurang membedakan kategori.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vocabulary dan nilai IDF dihitung dari data training.</span>
+<span class="n">vocabulary</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span>
+    <span class="n">kata</span>
+    <span class="k">for</span> <span class="n">indeks</span> <span class="ow">in</span> <span class="n">indeks_training</span>
+    <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">dokumen_token</span><span class="p">[</span><span class="n">indeks</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="n">kolom_kata</span> <span class="o">=</span> <span class="p">{</span><span class="n">kata</span><span class="p">:</span> <span class="n">posisi</span> <span class="k">for</span> <span class="n">posisi</span><span class="p">,</span> <span class="n">kata</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
+<span class="n">jumlah_dokumen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indeks_training</span><span class="p">)</span>
+<span class="n">document_frequency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">indeks</span> <span class="ow">in</span> <span class="n">indeks_training</span><span class="p">:</span>
+    <span class="n">posisi_kata</span> <span class="o">=</span> <span class="p">{</span><span class="n">kolom_kata</span><span class="p">[</span><span class="n">kata</span><span class="p">]</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">dokumen_token</span><span class="p">[</span><span class="n">indeks</span><span class="p">]}</span>
+    <span class="n">document_frequency</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">posisi_kata</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">idf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">jumlah_dokumen</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">document_frequency</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah kata unik: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Panjang vektor setiap berita: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">idf</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah kata unik: 5845
+Panjang vektor setiap berita: 5845
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tahap-4-menghitung-nilai-tf-idf">
+<h2>Tahap 4: Menghitung Nilai TF-IDF<a class="headerlink" href="#tahap-4-menghitung-nilai-tf-idf" title="Permalink to this heading">#</a></h2>
+<p>TF (<em>Term Frequency</em>) mengukur seberapa sering kata muncul dalam satu berita:</p>
+<div class="math notranslate nohighlight">
+\[
+TF(t,d) = \frac{\text{jumlah kemunculan kata } t}{\text{jumlah seluruh kata dalam dokumen } d}
+\]</div>
+<p>Nilai TF-IDF diperoleh dari:</p>
+<div class="math notranslate nohighlight">
+\[
+TFIDF(t,d) = TF(t,d) \times IDF(t)
+\]</div>
+<p>Nilai besar berarti kata tersebut cukup sering muncul pada berita tertentu, tetapi tidak muncul pada terlalu banyak berita lain. Setelah dihitung, setiap berita menjadi satu vektor angka dengan panjang yang sama, yaitu sebanyak kata dalam vocabulary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menghitung TF-IDF untuk satu dokumen.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hitung_tfidf</span><span class="p">(</span><span class="n">indeks</span><span class="p">):</span>
+    <span class="n">hitungan</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+        <span class="n">kata</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">dokumen_token</span><span class="p">[</span><span class="n">indeks</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">kolom_kata</span>
+    <span class="p">)</span>
+    <span class="n">vektor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">total_kata</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hitungan</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">total_kata</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">kata</span><span class="p">,</span> <span class="n">jumlah</span> <span class="ow">in</span> <span class="n">hitungan</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">posisi</span> <span class="o">=</span> <span class="n">kolom_kata</span><span class="p">[</span><span class="n">kata</span><span class="p">]</span>
+            <span class="n">tf</span> <span class="o">=</span> <span class="n">jumlah</span> <span class="o">/</span> <span class="n">total_kata</span>
+            <span class="n">vektor</span><span class="p">[</span><span class="n">posisi</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">*</span> <span class="n">idf</span><span class="p">[</span><span class="n">posisi</span><span class="p">]</span>
+
+    <span class="n">norma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vektor</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vektor</span> <span class="o">/</span> <span class="n">norma</span> <span class="k">if</span> <span class="n">norma</span> <span class="k">else</span> <span class="n">vektor</span>
+
+<span class="n">matriks_tfidf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+    <span class="n">hitung_tfidf</span><span class="p">(</span><span class="n">indeks</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">indeks</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">index</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bentuk matriks TF-IDF: </span><span class="si">{</span><span class="n">matriks_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bentuk matriks TF-IDF: (200, 5845)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tahap-5-membentuk-dataset-vektor">
+<h2>Tahap 5: Membentuk Dataset Vektor<a class="headerlink" href="#tahap-5-membentuk-dataset-vektor" title="Permalink to this heading">#</a></h2>
+<p>Pada tahap ini, hasil TF-IDF disusun dalam dua bentuk:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset_vektor</span></code>: berisi <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">isi_berita</span></code>, dan <code class="docutils literal notranslate"><span class="pre">label</span></code>. Kolom <code class="docutils literal notranslate"><span class="pre">isi_berita</span></code> berisi dictionary kata dan nilai TF-IDF.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset_tfidf</span></code>: berisi satu kolom untuk setiap kata dalam vocabulary. Nilai setiap baris adalah nilai TF-IDF berita tersebut.</p></li>
+</ol>
+<p>Label teks diubah menjadi angka agar dapat digunakan dalam proses klasifikasi:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sport</span> <span class="pre">=</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">finance</span> <span class="pre">=</span> <span class="pre">2</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Membuat dataset dengan isi_berita berupa dictionary kata dan nilai TF-IDF.</span>
+<span class="n">label_numerik</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s2">"sport"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"finance"</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">dataset_vektor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+    <span class="s2">"isi_berita"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+            <span class="n">kata</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">nilai</span><span class="p">),</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">kata</span><span class="p">,</span> <span class="n">nilai</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="n">vektor</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nilai</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">})</span>
+        <span class="k">for</span> <span class="n">vektor</span> <span class="ow">in</span> <span class="n">matriks_tfidf</span>
+    <span class="p">],</span>
+    <span class="s2">"label"</span><span class="p">:</span> <span class="n">label_numerik</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="n">dataset_tfidf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matriks_tfidf</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vocabulary</span><span class="p">)</span>
+<span class="n">dataset_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">,</span> <span class="n">label_numerik</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+<span class="n">dataset_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">,</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+
+<span class="n">dataset_vektor</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"dataset_vektor_tfidf.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">)</span>
+<span class="n">dataset_tfidf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"dataset_tfidf_matriks.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"File TF-IDF berhasil dibuat:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"- dataset_vektor_tfidf.csv"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"- dataset_tfidf_matriks.csv"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">dataset_vektor</span><span class="p">[[</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"isi_berita"</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File TF-IDF berhasil dibuat:
+- dataset_vektor_tfidf.csv
+- dataset_tfidf_matriks.csv
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>isi_berita</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>SP001</td>
+      <td>{"abu": 0.23200457, "adalah": 0.03235354, "adv...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>SP002</td>
+      <td>{"adalah": 0.03193162, "advertisement": 0.0090...</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SP003</td>
+      <td>{"advertisement": 0.00922431, "aff": 0.0246615...</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="tahap-6-klasifikasi-berbasis-centroid">
+<h2>Tahap 6: Klasifikasi Berbasis Centroid<a class="headerlink" href="#tahap-6-klasifikasi-berbasis-centroid" title="Permalink to this heading">#</a></h2>
+<p>Centroid adalah rata-rata posisi vektor dari seluruh berita dalam satu kategori. Notebook menghitung centroid untuk <code class="docutils literal notranslate"><span class="pre">sport</span></code> dan <code class="docutils literal notranslate"><span class="pre">finance</span></code>, lalu mengukur jarak setiap berita testing ke kedua centroid.</p>
+<p>Berita diberi label kategori dengan jarak yang lebih dekat. Karena vektor TF-IDF sudah dinormalisasi, jarak tersebut dapat digunakan untuk membandingkan kemiripan isi berita secara numerik.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Klasifikasi sederhana menggunakan jarak centroid TF-IDF.</span>
+<span class="n">centroid_sport</span> <span class="o">=</span> <span class="n">matriks_tfidf</span><span class="p">[</span><span class="n">indeks_training</span><span class="p">][</span>
+    <span class="n">label_numerik</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indeks_training</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">centroid_finance</span> <span class="o">=</span> <span class="n">matriks_tfidf</span><span class="p">[</span><span class="n">indeks_training</span><span class="p">][</span>
+    <span class="n">label_numerik</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indeks_training</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">distance_sport</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+    <span class="n">matriks_tfidf</span><span class="p">[</span><span class="n">indeks_testing</span><span class="p">]</span> <span class="o">-</span> <span class="n">centroid_sport</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">distance_finance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+    <span class="n">matriks_tfidf</span><span class="p">[</span><span class="n">indeks_testing</span><span class="p">]</span> <span class="o">-</span> <span class="n">centroid_finance</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">prediksi_testing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">distance_sport</span> <span class="o">&lt;=</span> <span class="n">distance_finance</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">akurasi</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">prediksi_testing</span> <span class="o">==</span> <span class="n">label_numerik</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indeks_testing</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Akurasi testing: </span><span class="si">{</span><span class="n">akurasi</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Akurasi testing: 82.50%
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="kesimpulan">
+<h2>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Permalink to this heading">#</a></h2>
+<p>Proses pengolahan 200 berita berhasil dilakukan dari teks mentah sampai menjadi vektor numerik yang dapat digunakan untuk klasifikasi.</p>
+<ul class="simple">
+<li><p>Simbol dibuang sebelum tokenisasi agar kata dihitung secara konsisten.</p></li>
+<li><p>Ditemukan <strong>6.786 kata unik</strong> sebelum stopword removal dan <strong>6.749 kata unik</strong> setelah stopword removal.</p></li>
+<li><p>Data dibagi menjadi <strong>160 berita training</strong> dan <strong>40 berita testing</strong>.</p></li>
+<li><p>Vocabulary dari data training berisi <strong>5.845 kata unik</strong>.</p></li>
+<li><p>Setiap berita diubah menjadi vektor TF-IDF dengan panjang <strong>5.845 fitur</strong>.</p></li>
+<li><p>Label kategori diubah menjadi angka: <code class="docutils literal notranslate"><span class="pre">sport</span> <span class="pre">=</span> <span class="pre">1</span></code> dan <code class="docutils literal notranslate"><span class="pre">finance</span> <span class="pre">=</span> <span class="pre">2</span></code>.</p></li>
+<li><p>Klasifikasi berbasis jarak centroid menghasilkan akurasi <strong>82,50%</strong> pada data testing.</p></li>
+</ul>
+<p>Artinya, TF-IDF berhasil mengubah isi berita menjadi representasi angka yang cukup informatif untuk membedakan berita sport dan finance. Akurasi 82,50% menunjukkan bahwa pendekatan ini sudah dapat mengenali sebagian besar kategori berita, walaupun masih ada beberapa berita yang salah diklasifikasikan.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1176,6 +1794,19 @@ Duplikat isi berita: 0
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-understanding-dan-data-preparation">Data Understanding dan Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-teks-dan-perhitungan-kata-unik">Preprocessing Teks dan Perhitungan Kata Unik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-yang-dilakukan">Apa yang dilakukan?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ada-dua-hasil">Mengapa ada dua hasil?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-preprocessing-sampai-klasifikasi">Alur Preprocessing sampai Klasifikasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-1-membentuk-dokumen-token">Tahap 1: Membentuk Dokumen Token</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-membagi-data-training-dan-testing">Tahap 2: Membagi Data Training dan Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-vocabulary-dan-idf">Tahap 3: Vocabulary dan IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-menghitung-nilai-tf-idf">Tahap 4: Menghitung Nilai TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-5-membentuk-dataset-vektor">Tahap 5: Membentuk Dataset Vektor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-6-klasifikasi-berbasis-centroid">Tahap 6: Klasifikasi Berbasis Centroid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
 </ul>
   </nav></div>
 
