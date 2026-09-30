@@ -1,12 +1,13 @@
 format: jb-book
 root: index
 
-chapters:
-  - file: detik
-  - file: 01_crawling
-  - file: 02_data_understanding
-  - file: 03_data_preprocessing
-  - file: 04_tf_idf
-  - file: 05_pca
-  - file: 06_skipgram
-
+parts:
+    chapters:
+      - file: detik
+        sections:
+          - file: 01_crawling
+          - file: 02_data_understanding
+          - file: 03_data_preprocessing
+          - file: 04_tf_idf
+          - file: 05_pca
+      - file: 06_skipgram
