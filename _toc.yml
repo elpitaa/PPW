@@ -1,7 +1,9 @@
 format: jb-book
+
 root: index
 
 parts:
+  - caption: Materi PPW
     chapters:
       - file: detik
         sections:
