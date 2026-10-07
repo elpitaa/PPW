@@ -1,5 +1,6 @@
-beautifulsoup4>=4.12
-numpy>=2.0
-requests>=2.31
+streamlit==1.35.0
+beautifulsoup4==4.12.3
+requests==2.32.3
+numpy==1.26.4
 scikit-learn==1.4.2
-streamlit>=1.35
+joblib==1.4.2
