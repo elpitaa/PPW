@@ -1,0 +1,4 @@
+Model,Accuracy,Precision_macro,Recall_macro,F1_macro
+TF-IDF + Naive Bayes,1.0,1.0,1.0,1.0
+TF-IDF + SVM,1.0,1.0,1.0,1.0
+TF-IDF + Logistic Regression,0.95,0.9545454545454546,0.95,0.949874686716792

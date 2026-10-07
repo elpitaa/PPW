@@ -1,0 +1,4 @@
+Model,Accuracy,Precision_macro,Recall_macro,F1_macro
+Skip-gram + Logistic Regression,1.0,1.0,1.0,1.0
+Skip-gram + SVM,1.0,1.0,1.0,1.0
+Skip-gram + Naive Bayes,0.925,0.9347826086956521,0.925,0.9245757385292269

@@ -384,10 +384,19 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-tf-idf">Konsep TF-IDF:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset-preprocessing">2. Membaca Dataset Preprocessing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembagian-data-training-160-dan-testing-40">3. Pembagian Data Training (160) dan Testing (40)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">3. Train-test split</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-vocabulary-dan-nilai-idf">4. Pembentukan Vocabulary dan Nilai IDF</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-matriks-tf-idf-untuk-seluruh-dokumen">5. Menghitung Matriks TF-IDF untuk Seluruh Dokumen</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menyusun-dataframe-tf-idf-menyimpan-hasil">6. Menyusun DataFrame TF-IDF &amp; Menyimpan Hasil</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-matriks-tf-idf">5. Menghitung matriks TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-hasil-tf-idf-dan-penyimpanan">6. Contoh hasil TF-IDF dan penyimpanan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klasifikasi-tf-idf">7. Klasifikasi TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-baseline-tf-idf">8. Interpretasi baseline TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-fitur-tf-idf">9. Interpretasi fitur TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#audit-step-1-tf-idf">Audit STEP 1 - TF-IDF</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-audit">Tujuan audit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan">Temuan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-audit">Kesimpulan audit</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -419,6 +428,11 @@ $<span class="math notranslate nohighlight">\(\text{IDF}(t) = \log\left(\frac{1 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">classification_report</span>
 </pre></div>
 </div>
 </div>
@@ -443,25 +457,37 @@ $<span class="math notranslate nohighlight">\(\text{IDF}(t) = \log\left(\frac{1 
 </div>
 </div>
 </section>
-<section id="pembagian-data-training-160-dan-testing-40">
-<h2>3. Pembagian Data Training (160) dan Testing (40)<a class="headerlink" href="#pembagian-data-training-160-dan-testing-40" title="Permalink to this heading">#</a></h2>
-<p>Vocabulary dan nilai IDF dibangun dari data training (80 sport dan 80 finance) agar evaluasi data testing objektif.</p>
+<section id="train-test-split">
+<h2>3. Train-test split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
+<p>Split dilakukan sebelum fitting TF-IDF. <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code> dan stratifikasi yang sama akan digunakan agar eksperimen TF-IDF dan Skip-gram memakai dokumen train/test yang sama.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indeks_train</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"sport"</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"finance"</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LABEL_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"sport"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"finance"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">indeks_train</span><span class="p">,</span> <span class="n">indeks_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span>
 <span class="p">)</span>
-<span class="n">indeks_test</span> <span class="o">=</span> <span class="p">[</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">indeks_train</span><span class="p">]</span>
+<span class="n">indeks_train</span> <span class="o">=</span> <span class="n">indeks_train</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">indeks_test</span> <span class="o">=</span> <span class="n">indeks_test</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah Training: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indeks_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> artikel"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah Testing : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indeks_test</span><span class="p">)</span><span class="si">}</span><span class="s2"> artikel"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Distribusi train:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_train</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Distribusi test:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_test</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah Training: 160 artikel
 Jumlah Testing : 40 artikel
+Distribusi train:
+{'finance': 80, 'sport': 80}
+Distribusi test:
+{'finance': 20, 'sport': 20}
 </pre></div>
 </div>
 </div>
@@ -501,49 +527,58 @@ Jumlah Testing : 40 artikel
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah Vocabulary (Fitur Kata): 6269
-Contoh 10 kata pertama: ['aaa', 'aau', 'abadi', 'abdullah', 'abidin', 'abimanyu', 'abraham', 'absen', 'absennya', 'academy']
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah Vocabulary (Fitur Kata): 6308
+Contoh 10 kata pertama: ['aaa', 'aau', 'abdullah', 'abidin', 'abimanyu', 'abk', 'abraham', 'abrian', 'absen', 'absennya']
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="menghitung-matriks-tf-idf-untuk-seluruh-dokumen">
-<h2>5. Menghitung Matriks TF-IDF untuk Seluruh Dokumen<a class="headerlink" href="#menghitung-matriks-tf-idf-untuk-seluruh-dokumen" title="Permalink to this heading">#</a></h2>
-<p>Menghitung bobot TF-IDF per dokumen dan melakukan normalisasi vektor (L2 Norm).</p>
+<section id="menghitung-matriks-tf-idf">
+<h2>5. Menghitung matriks TF-IDF<a class="headerlink" href="#menghitung-matriks-tf-idf" title="Permalink to this heading">#</a></h2>
+<p>Vocabulary dan IDF sudah dipelajari dari data train. Fungsi berikut hanya memakai vocabulary dan IDF tersebut untuk mengubah dokumen menjadi vector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hitung_vektor_tfidf</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
     <span class="n">total_kata</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
     <span class="n">vektor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">))</span>
-    
+
     <span class="k">if</span> <span class="n">total_kata</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">kata</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">kata_to_idx</span><span class="p">:</span>
                 <span class="n">posisi</span> <span class="o">=</span> <span class="n">kata_to_idx</span><span class="p">[</span><span class="n">kata</span><span class="p">]</span>
                 <span class="n">tf</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">/</span> <span class="n">total_kata</span>
                 <span class="n">vektor</span><span class="p">[</span><span class="n">posisi</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">*</span> <span class="n">idf</span><span class="p">[</span><span class="n">posisi</span><span class="p">]</span>
-                
+
     <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vektor</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">vektor</span> <span class="o">/</span> <span class="n">norm</span> <span class="k">if</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">vektor</span>
 
-<span class="c1"># Bentuk matriks TF-IDF (200 x V)</span>
-<span class="n">matriks_tfidf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">hitung_vektor_tfidf</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="k">for</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">dokumen_tokens</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Bentuk Matriks TF-IDF:"</span><span class="p">,</span> <span class="n">matriks_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">X_train_tfidf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">hitung_vektor_tfidf</span><span class="p">(</span><span class="n">dokumen_tokens</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">indeks_train</span><span class="p">])</span>
+<span class="n">X_test_tfidf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">hitung_vektor_tfidf</span><span class="p">(</span><span class="n">dokumen_tokens</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">indeks_test</span><span class="p">])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_train</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">LABEL_MAP</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_test</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">LABEL_MAP</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Bentuk X_train_tfidf:"</span><span class="p">,</span> <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Bentuk X_test_tfidf :"</span><span class="p">,</span> <span class="n">X_test_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Bentuk document-term matrix train:"</span><span class="p">,</span> <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Contoh 10 fitur:"</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bentuk Matriks TF-IDF: (200, 6269)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bentuk X_train_tfidf: (160, 6308)
+Bentuk X_test_tfidf : (40, 6308)
+Bentuk document-term matrix train: (160, 6308)
+Contoh 10 fitur: ['aaa', 'aau', 'abdullah', 'abidin', 'abimanyu', 'abk', 'abraham', 'abrian', 'absen', 'absennya']
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="menyusun-dataframe-tf-idf-menyimpan-hasil">
-<h2>6. Menyusun DataFrame TF-IDF &amp; Menyimpan Hasil<a class="headerlink" href="#menyusun-dataframe-tf-idf-menyimpan-hasil" title="Permalink to this heading">#</a></h2>
-<p>Label diubah ke numerik (<code class="docutils literal notranslate"><span class="pre">sport</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">finance</span> <span class="pre">=</span> <span class="pre">2</span></code>) dan disimpan ke <code class="docutils literal notranslate"><span class="pre">hasil_tfidf.csv</span></code>.</p>
+<section id="contoh-hasil-tf-idf-dan-penyimpanan">
+<h2>6. Contoh hasil TF-IDF dan penyimpanan<a class="headerlink" href="#contoh-hasil-tf-idf-dan-penyimpanan" title="Permalink to this heading">#</a></h2>
+<p>Setiap baris matrix adalah dokumen, sedangkan setiap kolom adalah kata. Nilai yang lebih besar menunjukkan kata yang lebih penting dalam dokumen relatif terhadap data training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"label ada di vocabulary:"</span><span class="p">,</span> <span class="s2">"label"</span> <span class="ow">in</span> <span class="n">vocabulary</span><span class="p">)</span>
@@ -555,29 +590,27 @@ Contoh 10 kata pertama: ['aaa', 'aau', 'abadi', 'abdullah', 'abidin', 'abimanyu'
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>label ada di vocabulary: False
 id ada di vocabulary: False
-Jumlah vocabulary: 6269
+Jumlah vocabulary: 6308
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tfidf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matriks_tfidf</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vocabulary</span><span class="p">)</span>
-<span class="n">df_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s2">"sport"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"finance"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
-<span class="n">df_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"id"</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tfidf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X_train_tfidf</span><span class="p">,</span> <span class="n">X_test_tfidf</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="n">vocabulary</span><span class="p">)</span>
+<span class="n">df_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"split"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"train"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train_tfidf</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"test"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test_tfidf</span><span class="p">))</span>
+<span class="n">df_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_train</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_test</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">LABEL_MAP</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+<span class="n">df_tfidf</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_train</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indeks_test</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">]])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
 
-<span class="n">df_tfidf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"hasil_tfidf.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Data TF-IDF berhasil disimpan ke 'hasil_tfidf.csv'."</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran DataFrame:"</span><span class="p">,</span> <span class="n">df_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran DataFrame TF-IDF:"</span><span class="p">,</span> <span class="n">df_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df_tfidf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">12</span><span class="p">])</span>
+<span class="n">df_tfidf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"hasil_tfidf.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data TF-IDF berhasil disimpan ke hasil_tfidf.csv"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data TF-IDF berhasil disimpan ke 'hasil_tfidf.csv'.
-Ukuran DataFrame: (200, 6271)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ukuran DataFrame TF-IDF: (200, 6311)
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -600,24 +633,24 @@ Ukuran DataFrame: (200, 6271)
       <th></th>
       <th>id</th>
       <th>label</th>
+      <th>split</th>
       <th>aaa</th>
       <th>aau</th>
-      <th>abadi</th>
       <th>abdullah</th>
       <th>abidin</th>
       <th>abimanyu</th>
+      <th>abk</th>
       <th>abraham</th>
+      <th>abrian</th>
       <th>absen</th>
-      <th>absennya</th>
-      <th>academy</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>SP001</td>
-      <td>1</td>
-      <td>0.0</td>
+      <td>FN055</td>
+      <td>2</td>
+      <td>train</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -630,9 +663,24 @@ Ukuran DataFrame: (200, 6271)
     </tr>
     <tr>
       <th>1</th>
-      <td>SP002</td>
+      <td>SP076</td>
       <td>1</td>
+      <td>train</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>0.033602</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>FN079</td>
+      <td>2</td>
+      <td>train</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -644,25 +692,10 @@ Ukuran DataFrame: (200, 6271)
       <td>0.0</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>SP003</td>
-      <td>1</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.059515</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
       <th>3</th>
-      <td>SP004</td>
+      <td>SP001</td>
       <td>1</td>
-      <td>0.0</td>
+      <td>train</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -675,9 +708,9 @@ Ukuran DataFrame: (200, 6271)
     </tr>
     <tr>
       <th>4</th>
-      <td>SP005</td>
+      <td>SP059</td>
       <td>1</td>
-      <td>0.0</td>
+      <td>train</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -690,8 +723,218 @@ Ukuran DataFrame: (200, 6271)
     </tr>
   </tbody>
 </table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data TF-IDF berhasil disimpan ke hasil_tfidf.csv
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="klasifikasi-tf-idf">
+<h2>7. Klasifikasi TF-IDF<a class="headerlink" href="#klasifikasi-tf-idf" title="Permalink to this heading">#</a></h2>
+<p>TF-IDF menghasilkan fitur numerik. Tiga classifier dibandingkan pada split yang sama: Multinomial Naive Bayes, Logistic Regression, dan Linear SVM.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">classifiers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"TF-IDF + Naive Bayes"</span><span class="p">:</span> <span class="n">MultinomialNB</span><span class="p">(),</span>
+    <span class="s2">"TF-IDF + Logistic Regression"</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="s2">"TF-IDF + SVM"</span><span class="p">:</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">hasil_klasifikasi</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">nama</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">classifiers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_tfidf</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">prediksi</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_tfidf</span><span class="p">)</span>
+    <span class="n">hasil_klasifikasi</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"Model"</span><span class="p">:</span> <span class="n">nama</span><span class="p">,</span>
+        <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prediksi</span><span class="p">),</span>
+        <span class="s2">"Precision_macro"</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prediksi</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="s2">"Recall_macro"</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prediksi</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="s2">"F1_macro"</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prediksi</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">hasil_klasifikasi_tfidf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hasil_klasifikasi</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"F1_macro"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">hasil_klasifikasi_tfidf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Accuracy</th>
+      <th>Precision_macro</th>
+      <th>Recall_macro</th>
+      <th>F1_macro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TF-IDF + Naive Bayes</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>TF-IDF + SVM</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>TF-IDF + Logistic Regression</td>
+      <td>0.95</td>
+      <td>0.954545</td>
+      <td>0.95</td>
+      <td>0.949875</td>
+    </tr>
+  </tbody>
+</table>
 </div></div></div>
 </div>
+</section>
+<section id="interpretasi-baseline-tf-idf">
+<h2>8. Interpretasi baseline TF-IDF<a class="headerlink" href="#interpretasi-baseline-tf-idf" title="Permalink to this heading">#</a></h2>
+<p>Semua classifier dilatih hanya menggunakan <code class="docutils literal notranslate"><span class="pre">X_train_tfidf</span></code>. Data test hanya digunakan untuk transformasi dengan vocabulary dan IDF train, lalu evaluasi. Dengan demikian, informasi label dan statistik test tidak digunakan saat fitting model. Macro F1 digunakan bersama accuracy agar performa kedua kelas dinilai seimbang.</p>
+</section>
+<section id="interpretasi-fitur-tf-idf">
+<h2>9. Interpretasi fitur TF-IDF<a class="headerlink" href="#interpretasi-fitur-tf-idf" title="Permalink to this heading">#</a></h2>
+<p>Untuk memahami matrix, kita tampilkan kata dengan bobot TF-IDF terbesar pada satu dokumen training. Kata tersebut paling menonjol pada dokumen itu berdasarkan frekuensi dan kelangkaannya di data training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">contoh_dokumen</span> <span class="o">=</span> <span class="n">X_train_tfidf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">peringkat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">contoh_dokumen</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">top_kata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"Kata"</span><span class="p">:</span> <span class="p">[</span><span class="n">vocabulary</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">peringkat</span><span class="p">],</span> <span class="s2">"Nilai_TFIDF"</span><span class="p">:</span> <span class="n">contoh_dokumen</span><span class="p">[</span><span class="n">peringkat</span><span class="p">]})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">top_kata</span><span class="p">)</span>
+<span class="n">hasil_klasifikasi_tfidf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"evaluasi_tfidf_classifier.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Evaluasi classifier disimpan ke evaluasi_tfidf_classifier.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Kata</th>
+      <th>Nilai_TFIDF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>vktr</td>
+      <td>0.326719</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>saham</td>
+      <td>0.262407</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>gems</td>
+      <td>0.224831</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>usd</td>
+      <td>0.223895</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>laba</td>
+      <td>0.192712</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>sema</td>
+      <td>0.192712</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>kontrak</td>
+      <td>0.167922</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>buy</td>
+      <td>0.160593</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>listrik</td>
+      <td>0.150068</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>miliar</td>
+      <td>0.150068</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Evaluasi classifier disimpan ke evaluasi_tfidf_classifier.csv
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="audit-step-1-tf-idf">
+<h2>Audit STEP 1 - TF-IDF<a class="headerlink" href="#audit-step-1-tf-idf" title="Permalink to this heading">#</a></h2>
+<section id="tujuan-audit">
+<h3>Tujuan audit<a class="headerlink" href="#tujuan-audit" title="Permalink to this heading">#</a></h3>
+<p>Memeriksa preprocessing, tokenisasi, pembentukan vocabulary, perhitungan TF-IDF, train-test split, dan potensi data leakage sebelum notebook diperbaiki.</p>
+</section>
+<section id="temuan">
+<h3>Temuan<a class="headerlink" href="#temuan" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Preprocessing dan tokenisasi:</strong> notebook menggunakan kolom <code class="docutils literal notranslate"><span class="pre">berita_clean</span></code> dan tokenisasi <code class="docutils literal notranslate"><span class="pre">split()</span></code>. Ini dapat digunakan selama hasil preprocessing tersebut konsisten dengan notebook Skip-gram.</p></li>
+<li><p><strong>Train-test split:</strong> pembagian data dilakukan manual berdasarkan 80 dokumen pertama setiap label untuk training. Jumlahnya 160 training dan 40 testing, tetapi split ini berbeda dari notebook Skip-gram yang menggunakan <code class="docutils literal notranslate"><span class="pre">train_test_split(random_state=42,</span> <span class="pre">stratify=...)</span></code>. Split perlu disamakan agar perbandingan adil.</p></li>
+<li><p><strong>Vocabulary dan IDF:</strong> vocabulary, document frequency, dan IDF dibangun hanya dari indeks training. Ini sudah benar untuk mencegah informasi statistik data testing masuk ke proses fitting.</p></li>
+<li><p><strong>TF-IDF:</strong> perhitungan <code class="docutils literal notranslate"><span class="pre">TF</span> <span class="pre">=</span> <span class="pre">frekuensi</span> <span class="pre">kata</span> <span class="pre">/</span> <span class="pre">jumlah</span> <span class="pre">kata</span></code>, <code class="docutils literal notranslate"><span class="pre">TF-IDF</span> <span class="pre">=</span> <span class="pre">TF</span> <span class="pre">*</span> <span class="pre">IDF</span></code>, smoothing IDF, dan normalisasi L2 sudah benar secara konsep.</p></li>
+<li><p><strong>Bentuk representasi:</strong> hasil memiliki bentuk <strong>Dokumen x Vocabulary</strong>, yaitu <code class="docutils literal notranslate"><span class="pre">(200,</span> <span class="pre">6269)</span></code>. Setiap baris adalah satu dokumen dan setiap kolom adalah satu kata/fitur.</p></li>
+<li><p><strong>Potensi leakage:</strong> vocabulary dan IDF tidak dibangun dari data testing, sehingga leakage belum terjadi pada bagian tersebut. Namun, matrix saat ini dihitung untuk seluruh dokumen dan belum dipisahkan secara eksplisit menjadi <code class="docutils literal notranslate"><span class="pre">X_train_tfidf</span></code> dan <code class="docutils literal notranslate"><span class="pre">X_test_tfidf</span></code>. Ini perlu diperjelas sebelum klasifikasi.</p></li>
+<li><p><strong>Klasifikasi:</strong> notebook baru menghasilkan fitur TF-IDF dan belum melakukan perbandingan classifier atau evaluasi.</p></li>
+</ul>
+</section>
+<section id="kesimpulan-audit">
+<h3>Kesimpulan audit<a class="headerlink" href="#kesimpulan-audit" title="Permalink to this heading">#</a></h3>
+<p>Fondasi perhitungan TF-IDF sudah benar dan tidak perlu diganti seluruhnya. Perbaikan berikutnya diperlukan untuk menyamakan split, memisahkan train/test secara eksplisit, menampilkan ukuran matrix dan contoh nilai TF-IDF, lalu menambahkan klasifikasi dan evaluasi.</p>
+</section>
 </section>
 </section>
 
@@ -762,10 +1005,19 @@ Ukuran DataFrame: (200, 6271)
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-tf-idf">Konsep TF-IDF:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">1. Import Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset-preprocessing">2. Membaca Dataset Preprocessing</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembagian-data-training-160-dan-testing-40">3. Pembagian Data Training (160) dan Testing (40)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">3. Train-test split</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-vocabulary-dan-nilai-idf">4. Pembentukan Vocabulary dan Nilai IDF</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-matriks-tf-idf-untuk-seluruh-dokumen">5. Menghitung Matriks TF-IDF untuk Seluruh Dokumen</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menyusun-dataframe-tf-idf-menyimpan-hasil">6. Menyusun DataFrame TF-IDF &amp; Menyimpan Hasil</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-matriks-tf-idf">5. Menghitung matriks TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-hasil-tf-idf-dan-penyimpanan">6. Contoh hasil TF-IDF dan penyimpanan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klasifikasi-tf-idf">7. Klasifikasi TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-baseline-tf-idf">8. Interpretasi baseline TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-fitur-tf-idf">9. Interpretasi fitur TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#audit-step-1-tf-idf">Audit STEP 1 - TF-IDF</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-audit">Tujuan audit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan">Temuan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-audit">Kesimpulan audit</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

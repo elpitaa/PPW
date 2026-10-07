@@ -1,0 +1,7 @@
+Vector_Size,Classifier,Accuracy,Precision_macro,Recall_macro,F1_macro
+50,Logistic Regression,1.0,1.0,1.0,1.0
+50,SVM,1.0,1.0,1.0,1.0
+100,Logistic Regression,1.0,1.0,1.0,1.0
+100,SVM,1.0,1.0,1.0,1.0
+200,Logistic Regression,1.0,1.0,1.0,1.0
+200,SVM,1.0,1.0,1.0,1.0
