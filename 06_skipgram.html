@@ -1253,18 +1253,13 @@ sg            : 1
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">word2vec_model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
-    <span class="n">sentences</span><span class="o">=</span><span class="n">train_sentences</span><span class="p">,</span> <span class="n">vector_size</span><span class="o">=</span><span class="n">VECTOR_SIZE</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">WINDOW_SIZE</span><span class="p">,</span>
-    <span class="n">min_count</span><span class="o">=</span><span class="n">MIN_COUNT</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sg</span><span class="o">=</span><span class="n">SG</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span>
-<span class="p">)</span>
-<span class="n">vocabulary</span> <span class="o">=</span> <span class="n">word2vec_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span>
-<span class="n">word_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
-<span class="n">index_to_word</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">word</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
-<span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>
-<span class="n">word_embeddings</span> <span class="o">=</span> <span class="n">word2vec_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah vocabulary:"</span><span class="p">,</span> <span class="n">VOCAB_SIZE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape word embedding:"</span><span class="p">,</span> <span class="n">word_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Contoh kata:"</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menyiapkan bobot awal sebelum proses training.</span>
+<span class="c1"># Bobot hasil training akan diisi pada cell "Training Skip-gram".</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">W1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">/</span> <span class="n">VECTOR_SIZE</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">VECTOR_SIZE</span><span class="p">,</span> <span class="p">(</span><span class="n">VOCAB_SIZE</span><span class="p">,</span> <span class="n">VECTOR_SIZE</span><span class="p">))</span>
+<span class="n">W2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">VECTOR_SIZE</span><span class="p">,</span> <span class="n">VOCAB_SIZE</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape W1 awal:"</span><span class="p">,</span> <span class="n">W1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape W2 awal:"</span><span class="p">,</span> <span class="n">W2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1282,7 +1277,42 @@ Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia',
 <p>Melatih model Skip-gram dengan melakukan forward pass, menghitung probabilitas softmax, cross-entropy loss, error output, gradien bobot, dan pembaruan bobot <span class="math notranslate nohighlight">\(W_1\)</span> dan <span class="math notranslate nohighlight">\(W_2\)</span> menggunakan stochastic gradient descent.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Training manual lama dinonaktifkan; model utama menggunakan gensim Word2Vec sg=1.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Training Skip-gram dilakukan oleh Word2Vec dengan sg=1.</span>
+<span class="c1"># Model belajar dari pasangan target-context dan memperbarui bobot embedding selama EPOCHS.</span>
+<span class="n">word2vec_model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
+    <span class="n">sentences</span><span class="o">=</span><span class="n">train_sentences</span><span class="p">,</span>
+    <span class="n">vector_size</span><span class="o">=</span><span class="n">VECTOR_SIZE</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="n">WINDOW_SIZE</span><span class="p">,</span>
+    <span class="n">min_count</span><span class="o">=</span><span class="n">MIN_COUNT</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">sg</span><span class="o">=</span><span class="n">SG</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">vocabulary</span> <span class="o">=</span> <span class="n">word2vec_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span>
+<span class="n">word_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
+<span class="n">index_to_word</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">word</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
+<span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>
+<span class="n">word_embeddings</span> <span class="o">=</span> <span class="n">word2vec_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">W1</span> <span class="o">=</span> <span class="n">word_embeddings</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Bobot output tersedia ketika Word2Vec menggunakan negative sampling.</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">word2vec_model</span><span class="p">,</span> <span class="s2">"syn1neg"</span><span class="p">):</span>
+    <span class="n">W2</span> <span class="o">=</span> <span class="n">word2vec_model</span><span class="o">.</span><span class="n">syn1neg</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Training selesai menggunakan Word2Vec Skip-gram dengan sg=1."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah vocabulary:"</span><span class="p">,</span> <span class="n">VOCAB_SIZE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape word embedding:"</span><span class="p">,</span> <span class="n">word_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Epoch:"</span><span class="p">,</span> <span class="n">EPOCHS</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training selesai menggunakan Word2Vec Skip-gram dengan sg=1.
+Jumlah vocabulary: 9014
+Shape word embedding: (9014, 50)
+Epoch: 20
 </pre></div>
 </div>
 </div>
@@ -1293,7 +1323,7 @@ Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia',
 <p>Setelah pelatihan, matriks <span class="math notranslate nohighlight">\(W_1\)</span> diambil sebagai representasi word embedding. Setiap baris mewakili representasi vektor 50-dimensi dari satu kata dalam vocabulary.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Training selesai menggunakan Word2Vec Skip-gram dengan sg=1."</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Word embedding siap digunakan untuk representasi dokumen."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
