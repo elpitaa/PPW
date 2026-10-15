@@ -438,10 +438,10 @@ document.write(`
 </section>
 <section id="ketentuan-preprocessing">
 <h2>Ketentuan Preprocessing:<a class="headerlink" href="#ketentuan-preprocessing" title="Permalink to this heading">#</a></h2>
-<p>Preprocessing pada tugas ini <strong>hanya menghilangkan tanda baca</strong>.
+<p>Preprocessing pada tugas ini menghilangkan tanda baca dan stopword bahasa Indonesia.
 Tidak dilakukan:</p>
 <ul class="simple">
-<li><p>Stopword removal</p></li>
+<li><p>Stemming</p></li>
 <li><p>Stemming</p></li>
 <li><p>Normalisasi kata</p></li>
 <li><p>Translasi bahasa asing</p></li>
@@ -797,16 +797,19 @@ Name: jumlah_kata_asli, dtype: float64
 </section>
 <section id="preprocessing">
 <h2>7. Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading">#</a></h2>
-<p>Preprocessing dilakukan dengan aturan: <strong>HANYA menghapus tanda baca</strong> (punctuation) menggunakan kategori Unicode ‘P’ dan merapikan whitespace. Tidak menggunakan stemming, stopword, translasi, TF-IDF, ICSDF, maupun PCA.</p>
+<p>Preprocessing dilakukan dengan menghapus tanda baca (punctuation) menggunakan kategori Unicode ‘P’, menghapus stopword bahasa Indonesia, dan merapikan whitespace. Tidak menggunakan stemming, translasi, TF-IDF, ICSDF, maupun PCA.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">remove_punctuation</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">STOPWORDS_ID</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ada"</span><span class="p">,</span> <span class="s2">"adalah"</span><span class="p">,</span> <span class="s2">"agar"</span><span class="p">,</span> <span class="s2">"akan"</span><span class="p">,</span> <span class="s2">"anda"</span><span class="p">,</span> <span class="s2">"antar"</span><span class="p">,</span> <span class="s2">"antara"</span><span class="p">,</span> <span class="s2">"apa"</span><span class="p">,</span> <span class="s2">"atau"</span><span class="p">,</span> <span class="s2">"atas"</span><span class="p">,</span> <span class="s2">"bagi"</span><span class="p">,</span> <span class="s2">"bagaimana"</span><span class="p">,</span> <span class="s2">"bahwa"</span><span class="p">,</span> <span class="s2">"beberapa"</span><span class="p">,</span> <span class="s2">"begitu"</span><span class="p">,</span> <span class="s2">"belum"</span><span class="p">,</span> <span class="s2">"bisa"</span><span class="p">,</span> <span class="s2">"dalam"</span><span class="p">,</span> <span class="s2">"dan"</span><span class="p">,</span> <span class="s2">"dapat"</span><span class="p">,</span> <span class="s2">"dari"</span><span class="p">,</span> <span class="s2">"daripada"</span><span class="p">,</span> <span class="s2">"di"</span><span class="p">,</span> <span class="s2">"dia"</span><span class="p">,</span> <span class="s2">"dengan"</span><span class="p">,</span> <span class="s2">"ia"</span><span class="p">,</span> <span class="s2">"ialah"</span><span class="p">,</span> <span class="s2">"itu"</span><span class="p">,</span> <span class="s2">"jadi"</span><span class="p">,</span> <span class="s2">"jika"</span><span class="p">,</span> <span class="s2">"juga"</span><span class="p">,</span> <span class="s2">"kami"</span><span class="p">,</span> <span class="s2">"kamu"</span><span class="p">,</span> <span class="s2">"karena"</span><span class="p">,</span> <span class="s2">"ke"</span><span class="p">,</span> <span class="s2">"kembali"</span><span class="p">,</span> <span class="s2">"kemudian"</span><span class="p">,</span> <span class="s2">"kepada"</span><span class="p">,</span> <span class="s2">"ketika"</span><span class="p">,</span> <span class="s2">"kita"</span><span class="p">,</span> <span class="s2">"lagi"</span><span class="p">,</span> <span class="s2">"lebih"</span><span class="p">,</span> <span class="s2">"maka"</span><span class="p">,</span> <span class="s2">"masih"</span><span class="p">,</span> <span class="s2">"melalui"</span><span class="p">,</span> <span class="s2">"mereka"</span><span class="p">,</span> <span class="s2">"menjadi"</span><span class="p">,</span> <span class="s2">"menurut"</span><span class="p">,</span> <span class="s2">"namun"</span><span class="p">,</span> <span class="s2">"oleh"</span><span class="p">,</span> <span class="s2">"pada"</span><span class="p">,</span> <span class="s2">"paling"</span><span class="p">,</span> <span class="s2">"para"</span><span class="p">,</span> <span class="s2">"pernah"</span><span class="p">,</span> <span class="s2">"saat"</span><span class="p">,</span> <span class="s2">"saja"</span><span class="p">,</span> <span class="s2">"sama"</span><span class="p">,</span> <span class="s2">"sambil"</span><span class="p">,</span> <span class="s2">"sangat"</span><span class="p">,</span> <span class="s2">"sebagai"</span><span class="p">,</span> <span class="s2">"sebuah"</span><span class="p">,</span> <span class="s2">"sebelum"</span><span class="p">,</span> <span class="s2">"secara"</span><span class="p">,</span> <span class="s2">"sedang"</span><span class="p">,</span> <span class="s2">"sehingga"</span><span class="p">,</span> <span class="s2">"sejak"</span><span class="p">,</span> <span class="s2">"seperti"</span><span class="p">,</span> <span class="s2">"serta"</span><span class="p">,</span> <span class="s2">"setelah"</span><span class="p">,</span> <span class="s2">"setiap"</span><span class="p">,</span> <span class="s2">"sudah"</span><span class="p">,</span> <span class="s2">"supaya"</span><span class="p">,</span> <span class="s2">"tak"</span><span class="p">,</span> <span class="s2">"tanpa"</span><span class="p">,</span> <span class="s2">"telah"</span><span class="p">,</span> <span class="s2">"tentang"</span><span class="p">,</span> <span class="s2">"terhadap"</span><span class="p">,</span> <span class="s2">"tersebut"</span><span class="p">,</span> <span class="s2">"tetapi"</span><span class="p">,</span> <span class="s2">"tidak"</span><span class="p">,</span> <span class="s2">"untuk"</span><span class="p">,</span> <span class="s2">"waktu"</span><span class="p">,</span> <span class="s2">"yang"</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_punctuation</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="c1"># Menghapus karakter kategori Punctuation (P)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">char</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">char</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"P"</span><span class="p">))</span>
     <span class="c1"># Menghapus whitespace berlebih</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">text</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STOPWORDS_ID</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
 
 <span class="n">df</span><span class="p">[</span><span class="s2">"berita_clean"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">remove_punctuation</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"isi_berita"</span><span class="p">,</span> <span class="s2">"berita_clean"</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
@@ -843,7 +846,7 @@ Name: jumlah_kata_asli, dtype: float64
       <th>0</th>
       <td>SP001</td>
       <td>FIA Rallycross World Cup Hadir di Ancol, Ini K...</td>
-      <td>FIA Rallycross World Cup Hadir di Ancol Ini Ke...</td>
+      <td>FIA Rallycross World Cup Hadir Ancol Ini Keser...</td>
       <td>sport</td>
     </tr>
     <tr>
@@ -871,7 +874,7 @@ Name: jumlah_kata_asli, dtype: float64
       <th>4</th>
       <td>SP005</td>
       <td>Gacor di Asian Games, Leo/Daniel Kini Bidik Tu...</td>
-      <td>Gacor di Asian Games LeoDaniel Kini Bidik Tur ...</td>
+      <td>Gacor Asian Games LeoDaniel Kini Bidik Tur Ero...</td>
       <td>sport</td>
     </tr>
   </tbody>
@@ -900,35 +903,35 @@ Sebelum:
 FIA Rallycross World Cup Hadir di Ancol, Ini Keseruan yang Bisa Disaksikan Tim detikEvent - Sport Rabu, 30 Sep 2026 21:50 WIB ... Tautan telah disalin Jakarta - Pecinta rallycross punya agenda baru yang bisa masuk kalender akhir tahun. FIA Rallycross...
 
 Sesudah:
-FIA Rallycross World Cup Hadir di Ancol Ini Keseruan yang Bisa Disaksikan Tim detikEvent Sport Rabu 30 Sep 2026 2150 WIB Tautan telah disalin Jakarta Pecinta rallycross punya agenda baru yang bisa masuk kalender akhir tahun FIA Rallycross World Cup I...
+FIA Rallycross World Cup Hadir Ancol Ini Keseruan Disaksikan Tim detikEvent Sport Rabu 30 Sep 2026 2150 WIB Tautan disalin Jakarta Pecinta rallycross punya agenda baru masuk kalender akhir tahun FIA Rallycross World Cup Indonesia 2026 hadir Ancol Ral...
 --------------------------------------------------------------------------------
 DATA 2
 Sebelum:
 Ini Kunci Desak Made Rita Raih Emas Asian Games 2026 Mercy Raya - detikSport Rabu, 30 Sep 2026 21:20 WIB Jakarta - Atlet panjat tebing Desak Made Rita Kusuma Dewi sukses meraih emas Asian Games 2026 . Lantas apa kunci kemenangannya? Turun di nomor sp...
 
 Sesudah:
-Ini Kunci Desak Made Rita Raih Emas Asian Games 2026 Mercy Raya detikSport Rabu 30 Sep 2026 2120 WIB Jakarta Atlet panjat tebing Desak Made Rita Kusuma Dewi sukses meraih emas Asian Games 2026 Lantas apa kunci kemenangannya Turun di nomor speed putri...
+Ini Kunci Desak Made Rita Raih Emas Asian Games 2026 Mercy Raya detikSport Rabu 30 Sep 2026 2120 WIB Jakarta Atlet panjat tebing Desak Made Rita Kusuma Dewi sukses meraih emas Asian Games 2026 Lantas kunci kemenangannya Turun nomor speed putri atlet ...
 --------------------------------------------------------------------------------
 DATA 3
 Sebelum:
 Desak Made Raih Emas Panjat Tebing Asian Games 2026 Rengga Sancaya - detikSport Rabu, 30 Sep 2026 21:03 WIB / Atlet panjat tebing Indonesia Desak Made Rita Kusuma Dewi berpose dengan medali emasnya usai menjadi yang tercepat pada final nomor speed pu...
 
 Sesudah:
-Desak Made Raih Emas Panjat Tebing Asian Games 2026 Rengga Sancaya detikSport Rabu 30 Sep 2026 2103 WIB Atlet panjat tebing Indonesia Desak Made Rita Kusuma Dewi berpose dengan medali emasnya usai menjadi yang tercepat pada final nomor speed putri As...
+Desak Made Raih Emas Panjat Tebing Asian Games 2026 Rengga Sancaya detikSport Rabu 30 Sep 2026 2103 WIB Atlet panjat tebing Indonesia Desak Made Rita Kusuma Dewi berpose medali emasnya usai tercepat final nomor speed putri Asian Games 2026 Portmesse ...
 --------------------------------------------------------------------------------
 DATA 4
 Sebelum:
 Profil Desak Made Peraih Emas Keempat RI: Kenal Panjat Tebing karena Bibi Mercy Raya - detikSport Rabu, 30 Sep 2026 20:15 WIB Jakarta - Desak Made Rita Kusuma Dewi kembali bikin bangga Indonesia. Ia menjadi atlet tercepat se-Asia setelah mempertahank...
 
 Sesudah:
-Profil Desak Made Peraih Emas Keempat RI Kenal Panjat Tebing karena Bibi Mercy Raya detikSport Rabu 30 Sep 2026 2015 WIB Jakarta Desak Made Rita Kusuma Dewi kembali bikin bangga Indonesia Ia menjadi atlet tercepat seAsia setelah mempertahankan medali...
+Profil Desak Made Peraih Emas Keempat RI Kenal Panjat Tebing Bibi Mercy Raya detikSport Rabu 30 Sep 2026 2015 WIB Jakarta Desak Made Rita Kusuma Dewi bikin bangga Indonesia atlet tercepat seAsia mempertahankan medali emasnya Asian Games 2026 AichiNag...
 --------------------------------------------------------------------------------
 DATA 5
 Sebelum:
 Gacor di Asian Games, Leo/Daniel Kini Bidik Tur Eropa Mercy Raya - detikSport Rabu, 30 Sep 2026 19:50 WIB Jakarta - Emas Asian Games 2026 bukan titik akhir bagi Leo Rolly Carnando / Daniel Marthin . Mereka membidik target selanjutnya di tur Eropa. Le...
 
 Sesudah:
-Gacor di Asian Games LeoDaniel Kini Bidik Tur Eropa Mercy Raya detikSport Rabu 30 Sep 2026 1950 WIB Jakarta Emas Asian Games 2026 bukan titik akhir bagi Leo Rolly Carnando Daniel Marthin Mereka membidik target selanjutnya di tur Eropa LeoDaniel menja...
+Gacor Asian Games LeoDaniel Kini Bidik Tur Eropa Mercy Raya detikSport Rabu 30 Sep 2026 1950 WIB Jakarta Emas Asian Games 2026 bukan titik akhir Leo Rolly Carnando Daniel Marthin membidik target selanjutnya tur Eropa LeoDaniel salah satu pebulutangki...
 --------------------------------------------------------------------------------
 </pre></div>
 </div>
@@ -950,7 +953,7 @@ Gacor di Asian Games LeoDaniel Kini Bidik Tur Eropa Mercy Raya detikSport Rabu 3
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total kata sebelum preprocessing: 76101
-Total kata setelah preprocessing: 75273
+Total kata setelah preprocessing: 60554
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -982,35 +985,35 @@ Total kata setelah preprocessing: 75273
       <th>0</th>
       <td>SP001</td>
       <td>484</td>
-      <td>479</td>
+      <td>368</td>
       <td>sport</td>
     </tr>
     <tr>
       <th>1</th>
       <td>SP002</td>
       <td>483</td>
-      <td>480</td>
+      <td>365</td>
       <td>sport</td>
     </tr>
     <tr>
       <th>2</th>
       <td>SP003</td>
       <td>245</td>
-      <td>242</td>
+      <td>203</td>
       <td>sport</td>
     </tr>
     <tr>
       <th>3</th>
       <td>SP004</td>
       <td>436</td>
-      <td>434</td>
+      <td>334</td>
       <td>sport</td>
     </tr>
     <tr>
       <th>4</th>
       <td>SP005</td>
       <td>361</td>
-      <td>356</td>
+      <td>269</td>
       <td>sport</td>
     </tr>
   </tbody>
@@ -1078,13 +1081,13 @@ Name: count, dtype: int64
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Contoh tokenisasi TRAINING (3 dokumen pertama):
-1. ['FIA', 'Rallycross', 'World', 'Cup', 'Hadir', 'di', 'Ancol', 'Ini', 'Keseruan', 'yang', 'Bisa', 'Disaksikan'] ...
+1. ['FIA', 'Rallycross', 'World', 'Cup', 'Hadir', 'Ancol', 'Ini', 'Keseruan', 'Disaksikan', 'Tim', 'detikEvent', 'Sport'] ...
 2. ['Ini', 'Kunci', 'Desak', 'Made', 'Rita', 'Raih', 'Emas', 'Asian', 'Games', '2026', 'Mercy', 'Raya'] ...
 3. ['Desak', 'Made', 'Raih', 'Emas', 'Panjat', 'Tebing', 'Asian', 'Games', '2026', 'Rengga', 'Sancaya', 'detikSport'] ...
 
 Contoh tokenisasi TESTING (3 dokumen pertama):
-1. ['Gacor', 'di', 'Asian', 'Games', 'LeoDaniel', 'Kini', 'Bidik', 'Tur', 'Eropa', 'Mercy', 'Raya', 'detikSport'] ...
-2. ['Panjat', 'Tebing', 'Buru', 'Medali', 'Yenni', 'Wahid', 'Aditya', 'atau', 'Veddriq', 'yang', 'Penting', 'Emas'] ...
+1. ['Gacor', 'Asian', 'Games', 'LeoDaniel', 'Kini', 'Bidik', 'Tur', 'Eropa', 'Mercy', 'Raya', 'detikSport', 'Rabu'] ...
+2. ['Panjat', 'Tebing', 'Buru', 'Medali', 'Yenni', 'Wahid', 'Aditya', 'Veddriq', 'Penting', 'Emas', 'Mercy', 'Raya'] ...
 3. ['Mau', 'Nonton', 'FIA', 'Rallycross', 'World', 'Cup', 'Indonesia', 'Ini', 'Cara', 'Pilih', 'Spotnya', 'Tim'] ...
 </pre></div>
 </div>
@@ -1116,7 +1119,7 @@ Contoh tokenisasi TESTING (3 dokumen pertama):
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah pasangan target-context: 121246
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah pasangan target-context: 97378
 
 20 pasangan pertama:
 FIA → Rallycross
@@ -1127,18 +1130,18 @@ World → Cup
 Cup → World
 Cup → Hadir
 Hadir → Cup
-Hadir → di
-di → Hadir
-di → Ancol
-Ancol → di
+Hadir → Ancol
+Ancol → Hadir
 Ancol → Ini
 Ini → Ancol
 Ini → Keseruan
 Keseruan → Ini
-Keseruan → yang
-yang → Keseruan
-yang → Bisa
-Bisa → yang
+Keseruan → Disaksikan
+Disaksikan → Keseruan
+Disaksikan → Tim
+Tim → Disaksikan
+Tim → detikEvent
+detikEvent → Tim
 </pre></div>
 </div>
 </div>
@@ -1162,7 +1165,7 @@ Bisa → yang
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah vocabulary: 9014
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah vocabulary: 8859
 
 Contoh vocabulary (30 kata pertama):
 + → 0
@@ -1264,9 +1267,8 @@ sg            : 1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah vocabulary: 9014
-Shape word embedding: (9014, 50)
-Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia', 'untuk', 'dari']
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape W1 awal: (8859, 50)
+Shape W2 awal: (50, 8859)
 </pre></div>
 </div>
 </div>
@@ -1310,8 +1312,8 @@ Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia',
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training selesai menggunakan Word2Vec Skip-gram dengan sg=1.
-Jumlah vocabulary: 9014
-Shape word embedding: (9014, 50)
+Jumlah vocabulary: 8859
+Shape word embedding: (8859, 50)
 Epoch: 20
 </pre></div>
 </div>
@@ -1333,10 +1335,10 @@ Epoch: 20
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Word embedding siap digunakan untuk representasi dokumen.
-Jumlah kata: 9014
+Jumlah kata: 8859
 Dimensi setiap vektor: 50
-Shape embedding: (9014, 50)
-Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia', 'untuk', 'dari']
+Shape embedding: (8859, 50)
+Contoh kata: ['2026', 'ini', 'Indonesia', 'Games', 'Asian', 'Jakarta', 'WIB', 'Rp', 'emas', 'disalin']
 </pre></div>
 </div>
 </div>
@@ -1412,129 +1414,129 @@ Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia',
   <tbody>
     <tr>
       <th>0</th>
-      <td>di</td>
-      <td>-0.099263</td>
-      <td>-0.141249</td>
-      <td>0.199935</td>
-      <td>0.664613</td>
-      <td>0.708077</td>
-      <td>-0.367164</td>
-      <td>-0.430826</td>
-      <td>0.525737</td>
-      <td>-1.387160</td>
+      <td>2026</td>
+      <td>-0.554832</td>
+      <td>0.068007</td>
+      <td>0.183365</td>
+      <td>0.346515</td>
+      <td>-0.028285</td>
+      <td>0.558098</td>
+      <td>-0.558311</td>
+      <td>0.477638</td>
+      <td>-0.245759</td>
       <td>...</td>
-      <td>-0.434356</td>
-      <td>0.453902</td>
-      <td>-0.623220</td>
-      <td>-0.044667</td>
-      <td>-0.508857</td>
-      <td>0.773297</td>
-      <td>0.000318</td>
-      <td>0.905499</td>
-      <td>0.234969</td>
-      <td>0.812050</td>
+      <td>0.389938</td>
+      <td>1.074495</td>
+      <td>0.553063</td>
+      <td>-0.325043</td>
+      <td>-0.208584</td>
+      <td>0.398039</td>
+      <td>0.059707</td>
+      <td>0.868764</td>
+      <td>0.701877</td>
+      <td>-0.113676</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>yang</td>
-      <td>-0.323264</td>
-      <td>-0.379624</td>
-      <td>-0.047195</td>
-      <td>-0.081294</td>
-      <td>-0.161965</td>
-      <td>-0.850618</td>
-      <td>-0.002654</td>
-      <td>-0.144003</td>
-      <td>0.051500</td>
+      <td>ini</td>
+      <td>0.037491</td>
+      <td>-0.458326</td>
+      <td>-0.935318</td>
+      <td>0.114109</td>
+      <td>-0.311265</td>
+      <td>-0.233930</td>
+      <td>0.467930</td>
+      <td>-0.552324</td>
+      <td>-0.089381</td>
       <td>...</td>
-      <td>-0.163915</td>
-      <td>0.030712</td>
-      <td>-0.113805</td>
-      <td>-0.514476</td>
-      <td>0.523793</td>
-      <td>-0.143763</td>
-      <td>-1.171770</td>
-      <td>0.615591</td>
-      <td>0.261206</td>
-      <td>-0.105105</td>
+      <td>-0.231192</td>
+      <td>0.271954</td>
+      <td>0.577932</td>
+      <td>-0.453317</td>
+      <td>-0.437703</td>
+      <td>-0.300565</td>
+      <td>-0.270330</td>
+      <td>0.096910</td>
+      <td>0.771542</td>
+      <td>-0.165333</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>dan</td>
-      <td>0.186441</td>
-      <td>-0.811479</td>
-      <td>0.069833</td>
-      <td>-0.587294</td>
-      <td>-0.131817</td>
-      <td>-0.000211</td>
-      <td>0.054138</td>
-      <td>-0.484318</td>
-      <td>-0.151844</td>
+      <td>Indonesia</td>
+      <td>0.433627</td>
+      <td>-0.356178</td>
+      <td>0.012873</td>
+      <td>0.516299</td>
+      <td>0.561990</td>
+      <td>0.196115</td>
+      <td>0.616915</td>
+      <td>0.614959</td>
+      <td>-0.100501</td>
       <td>...</td>
-      <td>0.725443</td>
-      <td>0.150337</td>
-      <td>-0.044218</td>
-      <td>0.181996</td>
-      <td>0.338357</td>
-      <td>1.085452</td>
-      <td>-0.574293</td>
-      <td>0.252145</td>
-      <td>0.536208</td>
-      <td>-0.118975</td>
+      <td>1.018246</td>
+      <td>-0.840450</td>
+      <td>0.584490</td>
+      <td>0.032274</td>
+      <td>0.440528</td>
+      <td>0.183338</td>
+      <td>0.014880</td>
+      <td>-0.353989</td>
+      <td>0.267831</td>
+      <td>-0.857267</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2026</td>
-      <td>0.096545</td>
-      <td>-0.927738</td>
-      <td>0.613016</td>
-      <td>-0.583833</td>
-      <td>-0.008066</td>
-      <td>-0.334610</td>
-      <td>-0.020547</td>
-      <td>0.518112</td>
-      <td>-0.237027</td>
+      <td>Games</td>
+      <td>0.367439</td>
+      <td>0.299349</td>
+      <td>-0.089452</td>
+      <td>-0.215463</td>
+      <td>-0.044617</td>
+      <td>0.547404</td>
+      <td>0.074066</td>
+      <td>1.175545</td>
+      <td>0.373800</td>
       <td>...</td>
-      <td>0.912824</td>
-      <td>0.117443</td>
-      <td>0.072207</td>
-      <td>0.052766</td>
-      <td>1.155042</td>
-      <td>-0.837508</td>
-      <td>0.410955</td>
-      <td>0.387480</td>
-      <td>0.451552</td>
-      <td>-0.086779</td>
+      <td>-0.108895</td>
+      <td>1.244295</td>
+      <td>0.123873</td>
+      <td>-0.198521</td>
+      <td>0.608781</td>
+      <td>-1.084386</td>
+      <td>0.123854</td>
+      <td>-0.349842</td>
+      <td>0.689754</td>
+      <td>-0.504057</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>ini</td>
-      <td>-0.634311</td>
-      <td>-0.034014</td>
-      <td>0.307501</td>
-      <td>-0.062664</td>
-      <td>-0.428335</td>
-      <td>-1.083312</td>
-      <td>-0.211620</td>
-      <td>0.504554</td>
-      <td>-0.219280</td>
+      <td>Asian</td>
+      <td>0.057223</td>
+      <td>0.324941</td>
+      <td>0.035822</td>
+      <td>0.122847</td>
+      <td>-0.395985</td>
+      <td>0.459963</td>
+      <td>0.245801</td>
+      <td>0.955032</td>
+      <td>0.276646</td>
       <td>...</td>
-      <td>-0.000016</td>
-      <td>0.533182</td>
-      <td>-0.778035</td>
-      <td>-0.391246</td>
-      <td>0.062033</td>
-      <td>-0.510009</td>
-      <td>-0.162295</td>
-      <td>0.540730</td>
-      <td>0.184141</td>
-      <td>-0.860430</td>
+      <td>0.028108</td>
+      <td>1.345397</td>
+      <td>0.266725</td>
+      <td>-0.235115</td>
+      <td>0.418033</td>
+      <td>-1.060697</td>
+      <td>0.126100</td>
+      <td>-0.040299</td>
+      <td>1.280153</td>
+      <td>-0.756522</td>
     </tr>
   </tbody>
 </table>
 <p>5 rows × 51 columns</p>
-</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kata           : di
-Vektor         : [-0.09926326 -0.14124893  0.19993491  0.66461337  0.708077  ] ...
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kata           : 2026
+Vektor         : [-0.5548316   0.06800705  0.18336529  0.34651455 -0.02828485] ...
 Dimensi vektor : 50
 </pre></div>
 </div>
@@ -1633,122 +1635,122 @@ Dokumen test dengan vector nol : 0
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.269856</td>
-      <td>-0.420116</td>
-      <td>0.184875</td>
-      <td>-0.306871</td>
-      <td>0.094874</td>
-      <td>-0.335325</td>
-      <td>-0.133049</td>
-      <td>0.007426</td>
-      <td>-0.482141</td>
-      <td>-0.004090</td>
+      <td>0.193448</td>
+      <td>-0.453486</td>
+      <td>0.006220</td>
+      <td>-0.132987</td>
+      <td>0.081423</td>
+      <td>0.042182</td>
+      <td>0.276539</td>
+      <td>0.417734</td>
+      <td>-0.114661</td>
+      <td>0.062460</td>
       <td>...</td>
-      <td>0.002213</td>
-      <td>-0.024011</td>
-      <td>-0.104238</td>
-      <td>0.239711</td>
-      <td>0.237804</td>
-      <td>-0.310157</td>
-      <td>0.292435</td>
-      <td>0.273424</td>
-      <td>-0.252013</td>
+      <td>0.078407</td>
+      <td>0.349393</td>
+      <td>-0.238376</td>
+      <td>0.082224</td>
+      <td>-0.150112</td>
+      <td>0.209415</td>
+      <td>0.174570</td>
+      <td>0.389818</td>
+      <td>-0.192810</td>
       <td>1</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.354025</td>
-      <td>-0.675808</td>
-      <td>0.033729</td>
-      <td>-0.412585</td>
-      <td>0.136013</td>
-      <td>-0.460620</td>
-      <td>-0.183539</td>
-      <td>-0.117129</td>
-      <td>-0.424647</td>
-      <td>0.055479</td>
+      <td>0.104173</td>
+      <td>-0.404631</td>
+      <td>0.027839</td>
+      <td>-0.199941</td>
+      <td>-0.144368</td>
+      <td>0.384544</td>
+      <td>0.450392</td>
+      <td>0.451403</td>
+      <td>0.092132</td>
+      <td>0.077403</td>
       <td>...</td>
-      <td>-0.105497</td>
-      <td>0.076911</td>
-      <td>0.023952</td>
-      <td>0.086845</td>
-      <td>0.244459</td>
-      <td>-0.302086</td>
-      <td>0.539845</td>
-      <td>0.167781</td>
-      <td>-0.199904</td>
+      <td>0.292939</td>
+      <td>0.408277</td>
+      <td>-0.295369</td>
+      <td>0.007079</td>
+      <td>-0.291501</td>
+      <td>0.100441</td>
+      <td>0.202284</td>
+      <td>0.577769</td>
+      <td>-0.293523</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-0.232752</td>
-      <td>-0.968077</td>
-      <td>0.178490</td>
-      <td>-0.426730</td>
-      <td>0.271027</td>
-      <td>-0.488201</td>
-      <td>-0.041677</td>
-      <td>-0.143242</td>
-      <td>-0.437237</td>
-      <td>0.056393</td>
+      <td>0.253874</td>
+      <td>-0.144586</td>
+      <td>0.163761</td>
+      <td>-0.202008</td>
+      <td>-0.072897</td>
+      <td>0.607092</td>
+      <td>0.451439</td>
+      <td>0.406403</td>
+      <td>-0.101749</td>
+      <td>0.156902</td>
       <td>...</td>
-      <td>-0.158868</td>
-      <td>0.030960</td>
-      <td>0.076457</td>
-      <td>-0.024974</td>
-      <td>0.224191</td>
-      <td>-0.342156</td>
-      <td>0.342168</td>
-      <td>0.195798</td>
-      <td>0.042524</td>
+      <td>0.303451</td>
+      <td>0.820328</td>
+      <td>-0.284694</td>
+      <td>0.101220</td>
+      <td>-0.392767</td>
+      <td>0.302476</td>
+      <td>0.222303</td>
+      <td>0.691840</td>
+      <td>-0.320356</td>
       <td>1</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-0.281952</td>
-      <td>-0.704147</td>
-      <td>0.038127</td>
-      <td>-0.401299</td>
-      <td>0.167824</td>
-      <td>-0.450003</td>
-      <td>-0.186872</td>
-      <td>-0.075846</td>
-      <td>-0.430338</td>
-      <td>0.012959</td>
+      <td>0.133605</td>
+      <td>-0.348114</td>
+      <td>0.012134</td>
+      <td>-0.163340</td>
+      <td>-0.121209</td>
+      <td>0.349498</td>
+      <td>0.395430</td>
+      <td>0.367543</td>
+      <td>0.019054</td>
+      <td>0.051785</td>
       <td>...</td>
-      <td>-0.112047</td>
-      <td>0.023737</td>
-      <td>0.049976</td>
-      <td>0.050325</td>
-      <td>0.213027</td>
-      <td>-0.232690</td>
-      <td>0.539817</td>
-      <td>0.277538</td>
-      <td>-0.086609</td>
+      <td>0.318570</td>
+      <td>0.395589</td>
+      <td>-0.219063</td>
+      <td>0.008164</td>
+      <td>-0.300895</td>
+      <td>0.086530</td>
+      <td>0.242675</td>
+      <td>0.503795</td>
+      <td>-0.329938</td>
       <td>1</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.284475</td>
-      <td>-0.948836</td>
-      <td>0.104581</td>
-      <td>-0.365952</td>
-      <td>0.234393</td>
-      <td>-0.433433</td>
-      <td>-0.119693</td>
-      <td>0.005189</td>
-      <td>-0.458007</td>
-      <td>0.000846</td>
+      <td>0.174816</td>
+      <td>-0.314123</td>
+      <td>0.059775</td>
+      <td>-0.139312</td>
+      <td>-0.086638</td>
+      <td>0.489418</td>
+      <td>0.381729</td>
+      <td>0.472331</td>
+      <td>-0.051650</td>
+      <td>0.133937</td>
       <td>...</td>
-      <td>-0.101088</td>
-      <td>0.115330</td>
-      <td>0.089319</td>
-      <td>-0.004240</td>
-      <td>0.167056</td>
-      <td>-0.270460</td>
-      <td>0.568372</td>
-      <td>0.316150</td>
-      <td>0.002003</td>
+      <td>0.384720</td>
+      <td>0.681001</td>
+      <td>-0.299528</td>
+      <td>0.156722</td>
+      <td>-0.347822</td>
+      <td>0.047778</td>
+      <td>0.273611</td>
+      <td>0.600881</td>
+      <td>-0.279441</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1824,122 +1826,122 @@ Dokumen test dengan vector nol : 0
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.437679</td>
-      <td>-0.666985</td>
-      <td>0.110861</td>
-      <td>-0.395533</td>
-      <td>0.103905</td>
-      <td>-0.466625</td>
-      <td>-0.222147</td>
-      <td>-0.055495</td>
-      <td>-0.449855</td>
-      <td>-0.002385</td>
+      <td>0.137606</td>
+      <td>-0.449215</td>
+      <td>-0.055521</td>
+      <td>-0.171899</td>
+      <td>-0.001750</td>
+      <td>0.075659</td>
+      <td>0.276013</td>
+      <td>0.489040</td>
+      <td>-0.009862</td>
+      <td>0.025802</td>
       <td>...</td>
-      <td>0.047614</td>
-      <td>0.124957</td>
-      <td>-0.025178</td>
-      <td>0.174631</td>
-      <td>0.205197</td>
-      <td>-0.246588</td>
-      <td>0.517212</td>
-      <td>0.205884</td>
-      <td>-0.282252</td>
+      <td>0.322587</td>
+      <td>0.379321</td>
+      <td>-0.318824</td>
+      <td>0.094853</td>
+      <td>-0.221886</td>
+      <td>0.092831</td>
+      <td>0.259551</td>
+      <td>0.623910</td>
+      <td>-0.330312</td>
       <td>1</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.260740</td>
-      <td>-0.742963</td>
-      <td>0.083989</td>
-      <td>-0.470057</td>
-      <td>0.159291</td>
-      <td>-0.438490</td>
-      <td>-0.165997</td>
-      <td>-0.106252</td>
-      <td>-0.428255</td>
-      <td>0.008422</td>
+      <td>0.185029</td>
+      <td>-0.346422</td>
+      <td>0.080258</td>
+      <td>-0.197765</td>
+      <td>-0.062730</td>
+      <td>0.383264</td>
+      <td>0.446009</td>
+      <td>0.439793</td>
+      <td>-0.037637</td>
+      <td>0.101000</td>
       <td>...</td>
-      <td>-0.117232</td>
-      <td>0.042878</td>
-      <td>0.050112</td>
-      <td>0.069936</td>
-      <td>0.250105</td>
-      <td>-0.307170</td>
-      <td>0.463471</td>
-      <td>0.238592</td>
-      <td>-0.127593</td>
+      <td>0.279407</td>
+      <td>0.502389</td>
+      <td>-0.260756</td>
+      <td>0.084008</td>
+      <td>-0.279642</td>
+      <td>0.122865</td>
+      <td>0.195741</td>
+      <td>0.543090</td>
+      <td>-0.368794</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-0.285197</td>
-      <td>-0.445581</td>
-      <td>0.165936</td>
-      <td>-0.277210</td>
-      <td>0.071359</td>
-      <td>-0.325817</td>
-      <td>-0.115009</td>
-      <td>-0.005746</td>
-      <td>-0.466328</td>
-      <td>-0.006704</td>
+      <td>0.168363</td>
+      <td>-0.457126</td>
+      <td>-0.026632</td>
+      <td>-0.158251</td>
+      <td>0.082655</td>
+      <td>0.056523</td>
+      <td>0.281653</td>
+      <td>0.399931</td>
+      <td>-0.096364</td>
+      <td>0.124052</td>
       <td>...</td>
-      <td>0.048757</td>
-      <td>-0.002947</td>
-      <td>-0.136552</td>
-      <td>0.233101</td>
-      <td>0.292908</td>
-      <td>-0.317445</td>
-      <td>0.324331</td>
-      <td>0.239147</td>
-      <td>-0.255465</td>
+      <td>0.092188</td>
+      <td>0.341725</td>
+      <td>-0.297831</td>
+      <td>0.092316</td>
+      <td>-0.118835</td>
+      <td>0.128961</td>
+      <td>0.187043</td>
+      <td>0.413746</td>
+      <td>-0.197186</td>
       <td>1</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-0.380733</td>
-      <td>-0.757360</td>
-      <td>0.201726</td>
-      <td>-0.385642</td>
-      <td>0.140909</td>
-      <td>-0.502010</td>
-      <td>-0.103976</td>
-      <td>-0.072674</td>
-      <td>-0.458338</td>
-      <td>0.003630</td>
+      <td>0.194036</td>
+      <td>-0.312901</td>
+      <td>0.099100</td>
+      <td>-0.155201</td>
+      <td>-0.039506</td>
+      <td>0.222530</td>
+      <td>0.328918</td>
+      <td>0.650349</td>
+      <td>0.052416</td>
+      <td>0.116230</td>
       <td>...</td>
-      <td>0.017353</td>
-      <td>0.089651</td>
-      <td>0.084121</td>
-      <td>0.090219</td>
-      <td>0.233156</td>
-      <td>-0.219408</td>
-      <td>0.570106</td>
-      <td>0.093451</td>
-      <td>-0.143139</td>
+      <td>0.453106</td>
+      <td>0.526260</td>
+      <td>-0.286820</td>
+      <td>0.163675</td>
+      <td>-0.359329</td>
+      <td>0.153033</td>
+      <td>0.219126</td>
+      <td>0.747052</td>
+      <td>-0.301039</td>
       <td>1</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.493980</td>
-      <td>-0.906187</td>
-      <td>0.339430</td>
-      <td>-0.303775</td>
-      <td>0.143005</td>
-      <td>-0.479667</td>
-      <td>-0.109783</td>
-      <td>-0.197757</td>
-      <td>-0.429716</td>
-      <td>0.058069</td>
+      <td>0.227861</td>
+      <td>-0.263947</td>
+      <td>0.078981</td>
+      <td>-0.079508</td>
+      <td>-0.024622</td>
+      <td>0.145985</td>
+      <td>0.354557</td>
+      <td>0.683278</td>
+      <td>0.020741</td>
+      <td>0.034813</td>
       <td>...</td>
-      <td>0.040321</td>
-      <td>0.091173</td>
-      <td>0.069634</td>
-      <td>0.161154</td>
-      <td>0.229467</td>
-      <td>-0.335145</td>
-      <td>0.352056</td>
-      <td>-0.023346</td>
-      <td>-0.112463</td>
+      <td>0.342737</td>
+      <td>0.661889</td>
+      <td>-0.497990</td>
+      <td>0.249505</td>
+      <td>-0.440082</td>
+      <td>0.322093</td>
+      <td>0.169533</td>
+      <td>0.946126</td>
+      <td>-0.290875</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -2020,12 +2022,12 @@ y_test : (40,)
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"model_berita.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model_bundle</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Model berhasil disimpan sebagai model_berita.pkl"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model berhasil disimpan sebagai model_berita.pkl2"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model berhasil disimpan sebagai model_berita.pkl
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model berhasil disimpan sebagai model_berita.pkl2
 </pre></div>
 </div>
 </div>
@@ -2166,8 +2168,8 @@ y_test : (40,)
       <th>12</th>
       <td>13</td>
       <td>1</td>
-      <td>0</td>
-      <td>Salah</td>
+      <td>1</td>
+      <td>Benar</td>
     </tr>
     <tr>
       <th>13</th>
@@ -2375,8 +2377,8 @@ y_test : (40,)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy : 0.9250
-Accuracy : 92.50%
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy : 0.9500
+Accuracy : 95.00%
 </pre></div>
 </div>
 </div>
@@ -2400,19 +2402,19 @@ Accuracy : 92.50%
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Precision : 0.9348
-Recall    : 0.9250
-F1-Score  : 0.9246
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Precision : 0.9545
+Recall    : 0.9500
+F1-Score  : 0.9499
 
 Classification Report:
               precision    recall  f1-score   support
 
-     finance       0.87      1.00      0.93        20
-       sport       1.00      0.85      0.92        20
+     finance       0.91      1.00      0.95        20
+       sport       1.00      0.90      0.95        20
 
-    accuracy                           0.93        40
-   macro avg       0.93      0.93      0.92        40
-weighted avg       0.93      0.93      0.92        40
+    accuracy                           0.95        40
+   macro avg       0.95      0.95      0.95        40
+weighted avg       0.95      0.95      0.95        40
 </pre></div>
 </div>
 </div>
@@ -2450,11 +2452,11 @@ weighted avg       0.93      0.93      0.92        40
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Confusion Matrix:
 [[20  0]
- [ 3 17]]
+ [ 2 18]]
 </pre></div>
 </div>
-<img alt="_images/4cb5d3a7bdf0fe928397cd926669fb5cdd5ec0839142598c96fcf5a9338253d4.png" src="_images/4cb5d3a7bdf0fe928397cd926669fb5cdd5ec0839142598c96fcf5a9338253d4.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah prediksi salah: 3
+<img alt="_images/7b139f32b54b70f857b50644a3fe09efedb9a5d17b999e91525052f0ce9f215a.png" src="_images/7b139f32b54b70f857b50644a3fe09efedb9a5d17b999e91525052f0ce9f215a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah prediksi salah: 2
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2492,13 +2494,6 @@ weighted avg       0.93      0.93      0.92        40
     <tr>
       <th>6</th>
       <td>7</td>
-      <td>1</td>
-      <td>0</td>
-      <td>Salah</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>13</td>
       <td>1</td>
       <td>0</td>
       <td>Salah</td>
@@ -2574,10 +2569,10 @@ weighted avg       0.93      0.93      0.92        40
       <td>40</td>
       <td>50</td>
       <td>5</td>
-      <td>0.925</td>
-      <td>0.934783</td>
-      <td>0.925</td>
-      <td>0.924576</td>
+      <td>0.95</td>
+      <td>0.954545</td>
+      <td>0.95</td>
+      <td>0.949875</td>
     </tr>
   </tbody>
 </table>
@@ -2639,14 +2634,6 @@ weighted avg       0.93      0.93      0.92        40
   </thead>
   <tbody>
     <tr>
-      <th>1</th>
-      <td>Skip-gram + Logistic Regression</td>
-      <td>1.000</td>
-      <td>1.000000</td>
-      <td>1.000</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
       <th>2</th>
       <td>Skip-gram + SVM</td>
       <td>1.000</td>
@@ -2655,12 +2642,20 @@ weighted avg       0.93      0.93      0.92        40
       <td>1.000000</td>
     </tr>
     <tr>
+      <th>1</th>
+      <td>Skip-gram + Logistic Regression</td>
+      <td>0.975</td>
+      <td>0.976190</td>
+      <td>0.975</td>
+      <td>0.974984</td>
+    </tr>
+    <tr>
       <th>0</th>
       <td>Skip-gram + Naive Bayes</td>
-      <td>0.925</td>
-      <td>0.934783</td>
-      <td>0.925</td>
-      <td>0.924576</td>
+      <td>0.950</td>
+      <td>0.954545</td>
+      <td>0.950</td>
+      <td>0.949875</td>
     </tr>
   </tbody>
 </table>
@@ -2729,58 +2724,58 @@ d:\data aplikasi\Python311\Lib\site-packages\sklearn\svm\_classes.py:31: FutureW
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>50</td>
-      <td>Logistic Regression</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
       <th>1</th>
       <td>50</td>
       <td>SVM</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>1.000</td>
+      <td>1.00000</td>
+      <td>1.000</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>2</th>
       <td>100</td>
       <td>Logistic Regression</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>1.000</td>
+      <td>1.00000</td>
+      <td>1.000</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>3</th>
       <td>100</td>
       <td>SVM</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>1.000</td>
+      <td>1.00000</td>
+      <td>1.000</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>4</th>
       <td>200</td>
       <td>Logistic Regression</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>1.000</td>
+      <td>1.00000</td>
+      <td>1.000</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>5</th>
       <td>200</td>
       <td>SVM</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>1.000</td>
+      <td>1.00000</td>
+      <td>1.000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>50</td>
+      <td>Logistic Regression</td>
+      <td>0.975</td>
+      <td>0.97619</td>
+      <td>0.975</td>
+      <td>0.974984</td>
     </tr>
   </tbody>
 </table>
@@ -2795,12 +2790,6 @@ d:\data aplikasi\Python311\Lib\site-packages\sklearn\svm\_classes.py:31: FutureW
 <span class="n">hasil_vector_size</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"eksperimen_vector_size.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Evaluasi classifier disimpan ke evaluasi_skipgram_classifier.csv"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Eksperimen vector_size disimpan ke eksperimen_vector_size.csv"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Evaluasi classifier disimpan ke evaluasi_skipgram_classifier.csv
-Eksperimen vector_size disimpan ke eksperimen_vector_size.csv
 </pre></div>
 </div>
 </div>
