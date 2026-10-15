@@ -19,12 +19,12 @@ SUPPORTED_DOMAINS = {"finance.detik.com", "sport.detik.com"}
 
 
 def clean_text(text):
-    text = "".join(
+    text = "".join( 
         character
         for character in str(text)
-        if not unicodedata.category(character).startswith("P")
+        if not unicodedata.category(character).startswith("P") #menghapus tanda baca
     )
-    return re.sub(r"\s+", " ", text).strip()
+    return re.sub(r"\s+", " ", text).strip() #merapikan spasi
 
 
 def fetch_article(url):
@@ -45,10 +45,13 @@ def fetch_article(url):
     )
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
+
     title_node = soup.select_one("h1.detail__title, h1")
     body_nodes = soup.select("div.detail__body-text") or soup.select("article p")
+
     title = title_node.get_text(" ", strip=True) if title_node else ""
     body = " ".join(node.get_text(" ", strip=True) for node in body_nodes)
+
     if not body:
         raise ValueError("Isi berita tidak ditemukan dari URL tersebut.")
     return title, body
@@ -66,22 +69,28 @@ def load_model():
 
 def predict(text, bundle):
     tokens = clean_text(text).split()
+
     word_to_index = bundle["word_to_index"]
     embeddings = np.asarray(bundle["word_embeddings"])
+
+    #mengambil vektor setiap kata 
     known_vectors = [
         embeddings[word_to_index[word]]
         for word in tokens
         if word in word_to_index
     ]
+    #Menentukan ukuran vektor dan menghitung rata-rata
     vector_size = bundle["vector_size"]
     document_vector = (
         np.mean(known_vectors, axis=0)
         if known_vectors
         else np.zeros(vector_size)
     )
+    #Mengklasifikasikan vektor berita
     classifier = bundle["classifier"]
     prediction = int(classifier.predict([document_vector])[0])
     probabilities = classifier.predict_proba([document_vector])[0]
+
     labels = bundle["label_mapping"]
     scores = {
         labels[int(class_index)]: float(probability)
