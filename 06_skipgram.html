@@ -1324,11 +1324,19 @@ Epoch: 20
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Word embedding siap digunakan untuk representasi dokumen."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah kata:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Dimensi setiap vektor:"</span><span class="p">,</span> <span class="n">word_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape embedding:"</span><span class="p">,</span> <span class="n">word_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Contoh kata:"</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training selesai menggunakan Word2Vec Skip-gram dengan sg=1.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Word embedding siap digunakan untuk representasi dokumen.
+Jumlah kata: 9014
+Dimensi setiap vektor: 50
+Shape embedding: (9014, 50)
+Contoh kata: ['di', 'yang', 'dan', '2026', 'ini', 'dengan', 'juga', 'Indonesia', 'untuk', 'dari']
 </pre></div>
 </div>
 </div>
