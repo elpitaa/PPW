@@ -1,0 +1,1737 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tugas Analisis Web Structure Mining &#8212; PPW - Web Search &amp; Mining</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'web_structure_mining';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.jpg" class="logo__image only-light" alt="PPW - Web Search & Mining - Home"/>
+    <script>document.write(`<img src="_static/foto.jpg" class="logo__image only-dark" alt="PPW - Web Search & Mining - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Halo!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Materi PPW</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="detik.html">Crawling Berita Detik.com: Sport dan Finance</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_crawling.html">01 - Crawling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_data_understanding.html">02. Data Understanding Berita Detik.com</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_data_preprocessing.html">03. Data Preprocessing Teks Berita</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_tf_idf.html">04. Pembobotan Kata dengan TF-IDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_pca.html">05. Reduksi Dimensi dengan Principal Component Analysis (PCA)</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="06_skipgram.html">Klasifikasi Berita Menggunakan Skip-gram dan Naive Bayes</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/elpitaa/PPW" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/elpitaa/PPW/issues/new?title=Issue%20on%20page%20%2Fweb_structure_mining.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/web_structure_mining.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Tugas Analisis Web Structure Mining</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-visualisasi-graf">A. Visualisasi Graf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b-analisis-directed-graph-dan-undirected-graph">B. Analisis Directed Graph dan Undirected Graph</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-setiap-vertex">1. Degree Setiap Vertex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rata-rata-lintasan-terpendek-average-shortest-path-length">2. Rata-rata Lintasan Terpendek (Average Shortest Path Length)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koefisien-klasterisasi-clustering-coefficient">3. Koefisien Klasterisasi (Clustering Coefficient)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-derajat-degree-distribution">4. Distribusi Derajat (Degree Distribution)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derajat-rata-rata-average-degree">5. Derajat Rata-rata (Average Degree)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kepadatan-graf-graph-density">6. Kepadatan Graf (Graph Density)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matriks-ketetanggaan-adjacency-matrix">7. Matriks Ketetanggaan (Adjacency Matrix)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diameter-jaringan-network-diameter">8. Diameter Jaringan (Network Diameter)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c-kesimpulan-dan-perbandingan-karakteristik">C. Kesimpulan dan Perbandingan Karakteristik</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="tugas-analisis-web-structure-mining">
+<h1>Tugas Analisis Web Structure Mining<a class="headerlink" href="#tugas-analisis-web-structure-mining" title="Permalink to this heading">#</a></h1>
+<p>Bagian ini berisi kode inisialisasi untuk membuat graf berarah (Directed) dan graf tidak berarah (Undirected) dengan 5 vertex (A, B, C, D, E) menggunakan library <strong>NetworkX</strong>.</p>
+<p>Agar perhitungan lintasan terpendek (<em>shortest path</em>) dan diameter dapat dilakukan tanpa error, struktur graf dirancang sedemikian rupa sehingga bersifat <em>strongly connected</em> (saling terhubung kuat) untuk Directed Graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># 1. Inisialisasi Vertex</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+
+<span class="c1"># 2. Definisikan hubungan (Edges) untuk Directed Graph</span>
+<span class="c1"># Relasi dibuat melingkar dengan beberapa bypass agar Strongly Connected</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>  <span class="c1"># Siklus utama</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>                       <span class="c1"># Hubungan bypass</span>
+<span class="p">]</span>
+
+<span class="c1"># Membuat Directed Graph (DiGraph)</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="c1"># 3. Definisikan hubungan (Edges) untuk Undirected Graph</span>
+<span class="c1"># Menggunakan struktur relasi yang sama (tanpa arah panah)</span>
+<span class="n">undirected_edges</span> <span class="o">=</span> <span class="n">directed_edges</span>
+
+<span class="c1"># Membuat Undirected Graph (Graph)</span>
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">undirected_edges</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Graf berhasil diinisialisasi!"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Directed Graph: </span><span class="si">{</span><span class="n">DG</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2"> node, </span><span class="si">{</span><span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2"> edge (Strongly Connected: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">is_strongly_connected</span><span class="p">(</span><span class="n">DG</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Undirected Graph: </span><span class="si">{</span><span class="n">UG</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2"> node, </span><span class="si">{</span><span class="n">UG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2"> edge (Connected: </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">is_connected</span><span class="p">(</span><span class="n">UG</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Graf berhasil diinisialisasi!
+Directed Graph: 5 node, 8 edge (Strongly Connected: True)
+Undirected Graph: 5 node, 8 edge (Connected: True)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="a-visualisasi-graf">
+<h2>A. Visualisasi Graf<a class="headerlink" href="#a-visualisasi-graf" title="Permalink to this heading">#</a></h2>
+<p>Berikut adalah pembuatan dua gambar terpisah untuk memvisualisasikan <strong>Directed Graph</strong> dan <strong>Undirected Graph</strong> dengan layout yang rapi dan warna node yang berbeda.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Memastikan variabel graf tersedia di dalam namespace sel ini</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="c1"># Mengatur posisi node agar konsisten</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">DG</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># 1. Visualisasi Directed Graph dengan arrow perbaikan bug</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">DG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">'skyblue'</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">DG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">font_family</span><span class="o">=</span><span class="s1">'sans-serif'</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span>
+    <span class="n">DG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span>
+    <span class="n">arrowstyle</span><span class="o">=</span><span class="s1">'-&gt;'</span><span class="p">,</span>
+    <span class="n">arrowsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">edge_color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">connectionstyle</span><span class="o">=</span><span class="s2">"arc3,rad=0.1"</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"1. Directed Graph (Graf Berarah)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'directed_graph.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 2. Visualisasi Undirected Graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">UG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">'lightgreen'</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">UG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">font_family</span><span class="o">=</span><span class="s1">'sans-serif'</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">UG</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span> <span class="c1"># Tanpa panah</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"2. Undirected Graph (Graf Tidak Berarah)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">'undirected_graph.png'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f3ff42f1abbc661318034831b822d4b6072125703df9d1b28032eeb8ff5ebe32.png" src="_images/f3ff42f1abbc661318034831b822d4b6072125703df9d1b28032eeb8ff5ebe32.png" />
+<img alt="_images/146300028c6268818cb002af6b9ee7000027074ad0c48bfe78327d85c3edd52c.png" src="_images/146300028c6268818cb002af6b9ee7000027074ad0c48bfe78327d85c3edd52c.png" />
+</div>
+</div>
+</section>
+<section id="b-analisis-directed-graph-dan-undirected-graph">
+<h2>B. Analisis Directed Graph dan Undirected Graph<a class="headerlink" href="#b-analisis-directed-graph-dan-undirected-graph" title="Permalink to this heading">#</a></h2>
+<section id="degree-setiap-vertex">
+<h3>1. Degree Setiap Vertex<a class="headerlink" href="#degree-setiap-vertex" title="Permalink to this heading">#</a></h3>
+<p>rumus derajat (Degree) simpul <span class="math notranslate nohighlight">\(i\)</span> pada graf tidak berarah adalah:
+$<span class="math notranslate nohighlight">\(k_i = \sum_{j} A_{ij}\)</span>$</p>
+<p>Sedangkan pada graf berarah, derajat terbagi menjadi:</p>
+<ul class="simple">
+<li><p><strong>In-Degree</strong> (jumlah edge masuk): <span class="math notranslate nohighlight">\(k_i^{in} = \sum_{j} A_{ji}\)</span></p></li>
+<li><p><strong>Out-Degree</strong> (jumlah edge keluar): <span class="math notranslate nohighlight">\(k_i^{out} = \sum_{j} A_{ij}\)</span></p></li>
+<li><p><strong>Total Degree</strong>: <span class="math notranslate nohighlight">\(k_i^{total} = k_i^{in} + k_i^{out}\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="c1"># Menghitung derajat</span>
+<span class="n">ug_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">UG</span><span class="o">.</span><span class="n">degree</span><span class="p">())</span>
+<span class="n">dg_in_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">in_degree</span><span class="p">())</span>
+<span class="n">dg_out_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">out_degree</span><span class="p">())</span>
+<span class="n">dg_total_degrees</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">dg_in_degrees</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">+</span> <span class="n">dg_out_degrees</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">}</span>
+
+<span class="c1"># Menampilkan Tabel Terpisah sesuai Prompt</span>
+<span class="n">df_ug_degree</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'Vertex'</span><span class="p">:</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="s1">'Degree (k_i)'</span><span class="p">:</span> <span class="p">[</span><span class="n">ug_degrees</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">df_dg_degree</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'Vertex'</span><span class="p">:</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="s1">'In-Degree (k_in)'</span><span class="p">:</span> <span class="p">[</span><span class="n">dg_in_degrees</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">],</span>
+    <span class="s1">'Out-Degree (k_out)'</span><span class="p">:</span> <span class="p">[</span><span class="n">dg_out_degrees</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">],</span>
+    <span class="s1">'Total Degree (k_total)'</span><span class="p">:</span> <span class="p">[</span><span class="n">dg_total_degrees</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Tabel Degree: Undirected Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_ug_degree</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">=== Tabel Degree: Directed Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_dg_degree</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Tabel Degree: Undirected Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Vertex</th>
+      <th>Degree (k_i)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>C</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>D</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>E</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Tabel Degree: Directed Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Vertex</th>
+      <th>In-Degree (k_in)</th>
+      <th>Out-Degree (k_out)</th>
+      <th>Total Degree (k_total)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B</td>
+      <td>2</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>C</td>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>D</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>E</td>
+      <td>2</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="rata-rata-lintasan-terpendek-average-shortest-path-length">
+<h3>2. Rata-rata Lintasan Terpendek (Average Shortest Path Length)<a class="headerlink" href="#rata-rata-lintasan-terpendek-average-shortest-path-length" title="Permalink to this heading">#</a></h3>
+<p><strong>Rumus Perhitungan:</strong>
+$<span class="math notranslate nohighlight">\(\text{Average Shortest Path Length} = \frac{1}{N(N-1)} \sum_{i \neq j} d(v_i, v_j)\)</span><span class="math notranslate nohighlight">\(
+Di mana \)</span>d(v_i, v_j)<span class="math notranslate nohighlight">\( adalah jarak lintasan terpendek dari vertex \)</span>i<span class="math notranslate nohighlight">\( ke \)</span>j<span class="math notranslate nohighlight">\(, dan total pasangan kemungkinan adalah \)</span>N(N-1) = 5 \times 4 = 20$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="c1"># Menampilkan matriks rincian jarak terpendek antar-pasangan simpul</span>
+<span class="n">dist_ug</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">all_pairs_shortest_path_length</span><span class="p">(</span><span class="n">UG</span><span class="p">))</span>
+<span class="n">dist_dg</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">all_pairs_shortest_path_length</span><span class="p">(</span><span class="n">DG</span><span class="p">))</span>
+
+<span class="n">matrix_ug</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dist_ug</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">matrix_dg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dist_dg</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
+
+<span class="n">total_dist_ug</span> <span class="o">=</span> <span class="n">matrix_ug</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">total_dist_dg</span> <span class="o">=</span> <span class="n">matrix_dg</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Rincian Jarak Jaringan Undirected Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">matrix_ug</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total Akumulasi Jarak (UG) = </span><span class="si">{</span><span class="n">total_dist_ug</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Average Shortest Path (UG) = </span><span class="si">{</span><span class="n">total_dist_ug</span><span class="si">}</span><span class="s2"> / 20 = </span><span class="si">{</span><span class="n">total_dist_ug</span><span class="o">/</span><span class="mi">20</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Rincian Jarak Jaringan Directed Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">matrix_dg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total Akumulasi Jarak (DG) = </span><span class="si">{</span><span class="n">total_dist_dg</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Average Shortest Path (DG) = </span><span class="si">{</span><span class="n">total_dist_dg</span><span class="si">}</span><span class="s2"> / 20 = </span><span class="si">{</span><span class="n">total_dist_dg</span><span class="o">/</span><span class="mi">20</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Rincian Jarak Jaringan Undirected Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>E</th>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total Akumulasi Jarak (UG) = 24
+Average Shortest Path (UG) = 24 / 20 = 1.2000
+
+=== Rincian Jarak Jaringan Directed Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A</th>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>E</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total Akumulasi Jarak (DG) = 34
+Average Shortest Path (DG) = 34 / 20 = 1.7000
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Penjelasan Singkat:</strong></p>
+<ul class="simple">
+<li><p>Pada <strong>Undirected Graph</strong>, rata-rata lintasan terpendek lebih kecil karena jalur komunikasi antar-node bersifat dua arah (timbal balik tanpa hambatan arah).</p></li>
+<li><p>Pada <strong>Directed Graph</strong>, jalurnya lebih panjang karena pergerakan dibatasi oleh arah anak panah, sehingga memerlukan rute memutar untuk mencapai node tertentu.</p></li>
+</ul>
+</section>
+<section id="koefisien-klasterisasi-clustering-coefficient">
+<h3>3. Koefisien Klasterisasi (Clustering Coefficient)<a class="headerlink" href="#koefisien-klasterisasi-clustering-coefficient" title="Permalink to this heading">#</a></h3>
+<p>rumus Clustering Coefficient lokal untuk simpul <span class="math notranslate nohighlight">\(i\)</span> pada Undirected Graph adalah:
+$<span class="math notranslate nohighlight">\(C_i = \frac{T_i}{k_i(k_i - 1) / 2} = \frac{2 T_i}{k_i(k_i - 1)}\)</span><span class="math notranslate nohighlight">\(
+Di mana \)</span>T_i<span class="math notranslate nohighlight">\( melambangkan jumlah hubungan segitiga aktual di sekitar simpul \)</span>i$.</p>
+<p>Untuk Directed Graph, NetworkX menggunakan algoritma <strong>Fagiolo (2007)</strong> yang menormalisasi relasi segitiga berarah terhadap semua kemungkinan interaksi berarah.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">clust_ug</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">clustering</span><span class="p">(</span><span class="n">UG</span><span class="p">)</span>
+<span class="n">clust_dg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">clustering</span><span class="p">(</span><span class="n">DG</span><span class="p">)</span>
+
+<span class="n">df_clust_ug</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'Vertex'</span><span class="p">:</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="s1">'Sisi Segitiga Riil (Ti)'</span><span class="p">:</span> <span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">triangles</span><span class="p">(</span><span class="n">UG</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">],</span>
+    <span class="s1">'Degree (k)'</span><span class="p">:</span> <span class="p">[</span><span class="n">UG</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">],</span>
+    <span class="s1">'Clustering Coeff'</span><span class="p">:</span> <span class="p">[</span><span class="n">clust_ug</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">df_clust_dg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'Vertex'</span><span class="p">:</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="s1">'Clustering Coeff (Fagiolo)'</span><span class="p">:</span> <span class="p">[</span><span class="n">clust_dg</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Clustering: Undirected Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_clust_ug</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Average Clustering (UG): </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">(</span><span class="n">UG</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Clustering: Directed Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_clust_dg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Average Clustering (DG): </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">(</span><span class="n">DG</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Clustering: Undirected Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Vertex</th>
+      <th>Sisi Segitiga Riil (Ti)</th>
+      <th>Degree (k)</th>
+      <th>Clustering Coeff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.666667</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.666667</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>C</td>
+      <td>4</td>
+      <td>4</td>
+      <td>0.666667</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>D</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.666667</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>E</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.666667</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average Clustering (UG): 0.6667
+
+=== Clustering: Directed Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Vertex</th>
+      <th>Clustering Coeff (Fagiolo)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A</td>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B</td>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>C</td>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>D</td>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>E</td>
+      <td>0.333333</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average Clustering (DG): 0.3333
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribusi-derajat-degree-distribution">
+<h3>4. Distribusi Derajat (Degree Distribution)<a class="headerlink" href="#distribusi-derajat-degree-distribution" title="Permalink to this heading">#</a></h3>
+<p>Distribusi derajat merepresentasikan frekuensi kemunculan nilai derajat tertentu di dalam jaringan, dinyatakan dalam <span class="math notranslate nohighlight">\(P(k)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">ug_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">UG</span><span class="o">.</span><span class="n">degree</span><span class="p">())</span>
+<span class="n">dg_in_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">in_degree</span><span class="p">())</span>
+<span class="n">dg_out_degrees</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">out_degree</span><span class="p">())</span>
+<span class="n">dg_total_degrees</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">dg_in_degrees</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">+</span> <span class="n">dg_out_degrees</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">}</span>
+
+<span class="c1"># Menghitung tabel frekuensi</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hitung_distribusi_tabel</span><span class="p">(</span><span class="n">nilai_derajat</span><span class="p">):</span>
+    <span class="n">df_ser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">nilai_derajat</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">'Degree (k)'</span><span class="p">:</span> <span class="n">df_ser</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="s1">'Frekuensi N(k)'</span><span class="p">:</span> <span class="n">df_ser</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="s1">'Probabilitas P(k)'</span><span class="p">:</span> <span class="n">df_ser</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">nilai_derajat</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Distribusi Derajat: Undirected Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">hitung_distribusi_tabel</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ug_degrees</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">=== Distribusi Derajat: Directed Graph (Total Degree) ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">hitung_distribusi_tabel</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dg_total_degrees</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
+
+<span class="c1"># Membuat plot visualisasi bar</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ug_degrees</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightgreen'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"UG Degree Distribution"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Degree"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Frekuensi"</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dg_total_degrees</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'skyblue'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"DG Total Degree Distribution"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Degree"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Frekuensi"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Distribusi Derajat: Undirected Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Degree (k)</th>
+      <th>Frekuensi N(k)</th>
+      <th>Probabilitas P(k)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>4</td>
+      <td>0.8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>1</td>
+      <td>0.2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Distribusi Derajat: Directed Graph (Total Degree) ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Degree (k)</th>
+      <th>Frekuensi N(k)</th>
+      <th>Probabilitas P(k)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>4</td>
+      <td>0.8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>1</td>
+      <td>0.2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><img alt="_images/fad3aa3f81804c9f90c874a62219adca692be6c92bd9f7e4cf3f7fe06ad125ef.png" src="_images/fad3aa3f81804c9f90c874a62219adca692be6c92bd9f7e4cf3f7fe06ad125ef.png" />
+</div>
+</div>
+</section>
+<section id="derajat-rata-rata-average-degree">
+<h3>5. Derajat Rata-rata (Average Degree)<a class="headerlink" href="#derajat-rata-rata-average-degree" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Undirected Graph</strong>:
+$<span class="math notranslate nohighlight">\(\bar{k} = \frac{2L}{N}\)</span>$</p></li>
+<li><p><strong>Directed Graph</strong>:
+$<span class="math notranslate nohighlight">\(\bar{k}_{in} = \bar{k}_{out} = \frac{L}{N}, \quad \bar{k}_{total} = \frac{2L}{N}\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">L_ug</span> <span class="o">=</span> <span class="n">UG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+<span class="n">L_dg</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+
+<span class="c1"># Perhitungan UG</span>
+<span class="n">avg_deg_ug</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">L_ug</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+<span class="c1"># Perhitungan DG</span>
+<span class="n">avg_in_dg</span> <span class="o">=</span> <span class="n">L_dg</span> <span class="o">/</span> <span class="n">N</span>
+<span class="n">avg_out_dg</span> <span class="o">=</span> <span class="n">L_dg</span> <span class="o">/</span> <span class="n">N</span>
+<span class="n">avg_total_dg</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">L_dg</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Undirected Graph ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rumus: 2 * L / N = 2 * </span><span class="si">{</span><span class="n">L_ug</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Hasil Average Degree: </span><span class="si">{</span><span class="n">avg_deg_ug</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Directed Graph ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rata-rata In-Degree (L/N)    : </span><span class="si">{</span><span class="n">L_dg</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">avg_in_dg</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rata-rata Out-Degree (L/N)   : </span><span class="si">{</span><span class="n">L_dg</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">avg_out_dg</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rata-rata Total Degree (2L/N): 2 * </span><span class="si">{</span><span class="n">L_dg</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">avg_total_dg</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Undirected Graph ===
+Rumus: 2 * L / N = 2 * 8 / 5
+Hasil Average Degree: 3.20
+
+=== Directed Graph ===
+Rata-rata In-Degree (L/N)    : 8 / 5 = 1.60
+Rata-rata Out-Degree (L/N)   : 8 / 5 = 1.60
+Rata-rata Total Degree (2L/N): 2 * 8 / 5 = 3.20
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="kepadatan-graf-graph-density">
+<h3>6. Kepadatan Graf (Graph Density)<a class="headerlink" href="#kepadatan-graf-graph-density" title="Permalink to this heading">#</a></h3>
+<p>rumus kepadatan graf (Density) adalah:</p>
+<ul class="simple">
+<li><p><strong>Undirected Graph</strong>:
+$<span class="math notranslate nohighlight">\(D = \frac{2L}{N(N-1)}\)</span>$</p></li>
+<li><p><strong>Directed Graph</strong>:
+$<span class="math notranslate nohighlight">\(D = \frac{L}{N(N-1)}\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">L_ug</span> <span class="o">=</span> <span class="n">UG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+<span class="n">L_dg</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+
+<span class="c1"># Menghitung batas maksimum tepi sebagai Integer</span>
+<span class="n">max_edges_ug</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">max_edges_dg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">density_ug</span> <span class="o">=</span> <span class="n">L_ug</span> <span class="o">/</span> <span class="n">max_edges_ug</span>
+<span class="n">density_dg</span> <span class="o">=</span> <span class="n">L_dg</span> <span class="o">/</span> <span class="n">max_edges_dg</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Kepadatan Graf (Density) ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Undirected Graph: 2 * </span><span class="si">{</span><span class="n">L_ug</span><span class="si">}</span><span class="s2"> / (</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">L_ug</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">max_edges_ug</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">density_ug</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (80% koneksi terbentuk)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Directed Graph: </span><span class="si">{</span><span class="n">L_dg</span><span class="si">}</span><span class="s2"> / (</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">L_dg</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">max_edges_dg</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">density_dg</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (40% koneksi terbentuk)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Kepadatan Graf (Density) ===
+Undirected Graph: 2 * 8 / (5 * 4) = 8/10 = 0.8000 (80% koneksi terbentuk)
+Directed Graph: 8 / (5 * 4) = 8/20 = 0.4000 (40% koneksi terbentuk)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Interpretasi Konteks Riil:</strong></p>
+<ul class="simple">
+<li><p>Nilai <strong>0.8000 (80%)</strong> pada Undirected Graph menunjukkan jaringan ini sangat padat, di mana sebagian besar node berpotensi saling bertukar informasi secara timbal balik.</p></li>
+<li><p>Nilai <strong>0.4000 (40%)</strong> pada Directed Graph menunjukkan tingkat peredaran data satu arah yang moderat, sehingga masih menyisakan ruang 60% rute baru yang belum terealisasi.</p></li>
+</ul>
+</section>
+<section id="matriks-ketetanggaan-adjacency-matrix">
+<h3>7. Matriks Ketetanggaan (Adjacency Matrix)<a class="headerlink" href="#matriks-ketetanggaan-adjacency-matrix" title="Permalink to this heading">#</a></h3>
+<p>Matriks ketetanggaan menunjukkan ada atau tidaknya hubungan langsung antarsimpul.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="c1"># Membuat Matriks Ketetanggaan</span>
+<span class="n">adj_ug</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_numpy_array</span><span class="p">(</span><span class="n">UG</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">adj_dg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_numpy_array</span><span class="p">(</span><span class="n">DG</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">df_adj_ug</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adj_ug</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">df_adj_dg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adj_dg</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
+
+<span class="c1"># Melakukan pengecekan simetri matematis</span>
+<span class="n">is_symmetric_ug</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_adj_ug</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">df_adj_ug</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">is_symmetric_dg</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_adj_dg</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">df_adj_dg</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Adjacency Matrix: Undirected Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_adj_ug</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sifat Matriks Simetris: </span><span class="si">{</span><span class="n">is_symmetric_ug</span><span class="si">}</span><span class="s2"> (Karena hubungan bersifat timbal balik)"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">=== Adjacency Matrix: Directed Graph ==="</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_adj_dg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sifat Matriks Simetris: </span><span class="si">{</span><span class="n">is_symmetric_dg</span><span class="si">}</span><span class="s2"> (Karena hubungan bersifat satu arah/asimetris)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Adjacency Matrix: Undirected Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>E</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sifat Matriks Simetris: True (Karena hubungan bersifat timbal balik)
+
+=== Adjacency Matrix: Directed Graph ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>E</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sifat Matriks Simetris: False (Karena hubungan bersifat satu arah/asimetris)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="diameter-jaringan-network-diameter">
+<h3>8. Diameter Jaringan (Network Diameter)<a class="headerlink" href="#diameter-jaringan-network-diameter" title="Permalink to this heading">#</a></h3>
+<p>Diameter adalah lintasan terpendek maksimum di dalam graf.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+
+<span class="c1"># Deklarasi lokal untuk mencegah NameError</span>
+<span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">]</span>
+<span class="n">directed_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'C'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">DG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">UG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+<span class="n">UG</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">directed_edges</span><span class="p">)</span>
+
+<span class="n">diameter_ug</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span><span class="n">UG</span><span class="p">)</span>
+<span class="n">diameter_dg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span><span class="n">DG</span><span class="p">)</span>
+
+<span class="c1"># Pembuktian pasangan penentu diameter</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Diameter Undirected Graph: </span><span class="si">{</span><span class="n">diameter_ug</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  -&gt; Dibuktikan oleh rute terpendek terpanjang A-D atau B-E (Jarak = 2 langkah)"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Diameter Directed Graph: </span><span class="si">{</span><span class="n">diameter_dg</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"  -&gt; Dibuktikan oleh rute searah terpanjang B-&gt;A (B-&gt;C-&gt;D-&gt;E-&gt;A) atau E-&gt;D (Jarak = 3 langkah)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diameter Undirected Graph: 2
+  -&gt; Dibuktikan oleh rute terpendek terpanjang A-D atau B-E (Jarak = 2 langkah)
+
+Diameter Directed Graph: 3
+  -&gt; Dibuktikan oleh rute searah terpanjang B-&gt;A (B-&gt;C-&gt;D-&gt;E-&gt;A) atau E-&gt;D (Jarak = 3 langkah)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Penjelasan Singkat:</strong></p>
+<ul class="simple">
+<li><p>Diameter <strong>Undirected Graph</strong> menunjukkan jarak maksimal tercepat yang dibutuhkan informasi untuk berpindah dari satu ujung simpul ke ujung simpul lainnya tanpa hambatan arah.</p></li>
+<li><p>Diameter <strong>Directed Graph</strong> bernilai lebih besar karena keterbatasan arah edge mengharuskan rute yang dilalui memutar lebih jauh.</p></li>
+</ul>
+</section>
+</section>
+<section id="c-kesimpulan-dan-perbandingan-karakteristik">
+<h2>C. Kesimpulan dan Perbandingan Karakteristik<a class="headerlink" href="#c-kesimpulan-dan-perbandingan-karakteristik" title="Permalink to this heading">#</a></h2>
+<p>Berikut adalah tabel rangkuman perbandingan karakteristik kedua graf:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Metrik Analisis</p></th>
+<th class="head text-center"><p>Undirected Graph</p></th>
+<th class="head text-center"><p>Directed Graph</p></th>
+<th class="head text-left"><p>Keterangan Hubungan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Rata-rata Jarak Lintasan</strong></p></td>
+<td class="text-center"><p>1.2000</p></td>
+<td class="text-center"><p>1.7000</p></td>
+<td class="text-left"><p>UG memiliki rute lebih fleksibel tanpa sekat arah panah</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Diameter Jaringan</strong></p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-left"><p>Di-Graph dibatasi arah searah sehingga membutuhkan rute memutar</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Kepadatan (Density)</strong></p></td>
+<td class="text-center"><p>0.8000</p></td>
+<td class="text-center"><p>0.4000</p></td>
+<td class="text-left"><p>Kapasitas tepi maksimum DG adalah dua kali lipat dari UG</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Average Clustering</strong></p></td>
+<td class="text-center"><p>0.6667</p></td>
+<td class="text-center"><p>0.3333</p></td>
+<td class="text-left"><p>UG membentuk klaster segitiga lebih padat dibanding DG</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Rata-rata Derajat (Total)</strong></p></td>
+<td class="text-center"><p>3.20</p></td>
+<td class="text-center"><p>3.20</p></td>
+<td class="text-left"><p>Rata-rata total kapasitas interaksi bernilai sama</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Sifat Matriks</strong></p></td>
+<td class="text-center"><p>Simetris</p></td>
+<td class="text-center"><p>Asimetris</p></td>
+<td class="text-left"><p>Menunjukkan hubungan timbal-balik vs satu arah</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-visualisasi-graf">A. Visualisasi Graf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b-analisis-directed-graph-dan-undirected-graph">B. Analisis Directed Graph dan Undirected Graph</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-setiap-vertex">1. Degree Setiap Vertex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rata-rata-lintasan-terpendek-average-shortest-path-length">2. Rata-rata Lintasan Terpendek (Average Shortest Path Length)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koefisien-klasterisasi-clustering-coefficient">3. Koefisien Klasterisasi (Clustering Coefficient)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-derajat-degree-distribution">4. Distribusi Derajat (Degree Distribution)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derajat-rata-rata-average-degree">5. Derajat Rata-rata (Average Degree)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kepadatan-graf-graph-density">6. Kepadatan Graf (Graph Density)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matriks-ketetanggaan-adjacency-matrix">7. Matriks Ketetanggaan (Adjacency Matrix)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diameter-jaringan-network-diameter">8. Diameter Jaringan (Network Diameter)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c-kesimpulan-dan-perbandingan-karakteristik">C. Kesimpulan dan Perbandingan Karakteristik</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Elvita Dian Prameswari
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
