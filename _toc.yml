@@ -13,4 +13,4 @@ parts:
           - file: 04_tf_idf
           - file: 05_pca
       - file: 06_skipgram
-      - file: 07_web_structure_mining
+      - file: web_structure_mining 
